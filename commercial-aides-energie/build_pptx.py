@@ -63,7 +63,7 @@ def add_header(slide, title, subtitle=None):
         add_text(slide, Inches(0.4), Inches(0.55), Inches(12), Inches(0.3), subtitle, size=11, color=LIGHT)
 
 
-def add_footer(slide, page_num, total=16):
+def add_footer(slide, page_num, total=22):
     add_text(slide, Inches(0.4), Inches(7.1), Inches(6), Inches(0.3),
              "Groupe HUARD - Aides & Primes Energie 2026 - Document interne", size=9, color=GREY)
     add_text(slide, Inches(11.5), Inches(7.1), Inches(1.5), Inches(0.3),
@@ -700,27 +700,403 @@ for i, (theme, url) in enumerate(sources_list):
 add_footer(s, 15)
 
 # =========================================================================
-# SLIDE 16 - CLOTURE
+# SLIDE 16 - PLAN ADMINISTRATIF HUARD - PIPELINE 6 PHASES
+# =========================================================================
+s = add_blank()
+add_header(s, "15. Plan administratif HUARD", "Pipeline de montage des aides client - 6 phases / de J0 a J+330")
+
+phases_ppt = [
+    ("J0 - J+2", "DETECTION", ORANGE,
+     "Commercial qualifie\nGrille eligibilite\nOPERAT si DEET"),
+    ("J+3 - J+10", "PRE-ETUDE", RED,
+     "Chiffrage CEE / ADVENIR\nNote opportunite\nDevis pre-detaille"),
+    ("J+10 - J+20", "DOSSIER", BLUE,
+     "Mandat client\nPieces RGE / audit\nPhotos avant"),
+    ("J+15 - J+25", "ENGAGEMENT", GREEN,
+     "Depot plateforme\n(CEE/ADVENIR/MPR)\nPUIS signature devis"),
+    ("J+25 - J+150", "TRAVAUX", RGBColor(0x82, 0xC3, 0x41),
+     "Execution + tracabilite\nFactures detaillees\nPV pose + photos"),
+    ("J+150 - J+330", "VERSEMENT", NAVY,
+     "Pieces de cloture\nVersement aide\nSuivi 3-5 ans"),
+]
+
+bw = Inches(2.05)
+bh = Inches(4.5)
+gap = Inches(0.1)
+x0 = Inches(0.4)
+y0 = Inches(1.4)
+
+for i, (delai, nom, color, contenu) in enumerate(phases_ppt):
+    sx = x0 + (bw + gap) * i
+    add_rect(s, sx, y0, bw, Inches(0.5), color)
+    add_text(s, sx + Inches(0.1), y0 + Inches(0.1), bw - Inches(0.2), Inches(0.35),
+             delai, size=11, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+    add_rect(s, sx, y0 + Inches(0.5), bw, Inches(0.7), color)
+    add_text(s, sx + Inches(0.1), y0 + Inches(0.6), bw - Inches(0.2), Inches(0.5),
+             f"PHASE {i+1}\n{nom}", size=14, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+    add_rect(s, sx, y0 + Inches(1.2), bw, bh - Inches(1.2), LIGHT)
+    add_text(s, sx + Inches(0.15), y0 + Inches(1.35), bw - Inches(0.3), bh - Inches(1.4),
+             contenu, size=10, color=NAVY)
+    # Fleche
+    if i < len(phases_ppt) - 1:
+        arrow = s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, sx + bw - Inches(0.05), y0 + Inches(2.0), Inches(0.15), Inches(0.25))
+        arrow.fill.solid()
+        arrow.fill.fore_color.rgb = ORANGE
+        arrow.line.fill.background()
+
+add_rect(s, Inches(0.4), Inches(6.2), Inches(12.5), Inches(0.65), RED)
+add_text(s, Inches(0.6), Inches(6.3), Inches(12.2), Inches(0.5),
+         "POINT CRITIQUE : pour CEE et ADVENIR, l'engagement sur plateforme DOIT etre fait AVANT signature devis - sinon prime perdue.",
+         size=12, bold=True, color=WHITE)
+add_footer(s, 16)
+
+# =========================================================================
+# SLIDE 17 - RACI INTERNE HUARD
+# =========================================================================
+s = add_blank()
+add_header(s, "16. RACI interne HUARD", "Qui fait quoi - matrice claire pour eviter les trous dans la raquette")
+
+raci_headers = ["Action", "Commercial", "Charge d'affaires", "Service aides", "Conduite trvx", "Comptabilite"]
+raci_data = [
+    ("Detection / qualification client", "R", "C", "I", "I", "-"),
+    ("Chiffrage devis + aides", "C", "R", "C", "C", "-"),
+    ("Choix du dispositif optimal", "C", "C", "R", "-", "-"),
+    ("Constitution dossier admin", "C", "C", "R", "I", "-"),
+    ("Mandat client signature", "R", "C", "C", "-", "-"),
+    ("Engagement plateformes", "I", "C", "R", "-", "-"),
+    ("Signature devis (apres engagement)", "R", "C", "I", "-", "-"),
+    ("Execution + tracabilite", "I", "C", "I", "R", "-"),
+    ("Depot pieces cloture", "I", "C", "R", "C", "-"),
+    ("Versement + facturation", "I", "I", "R", "-", "C"),
+    ("Controle a posteriori 3-5 ans", "-", "-", "R", "C", "I"),
+]
+
+col_widths = [Inches(4.0)] + [Inches(1.7)] * 5
+start_x = Inches(0.5)
+y = Inches(1.3)
+rh = Inches(0.36)
+
+x = start_x
+for ci, h in enumerate(raci_headers):
+    add_rect(s, x, y, col_widths[ci], rh, NAVY)
+    add_text(s, x + Inches(0.05), y + Inches(0.04), col_widths[ci] - Inches(0.1), rh - Inches(0.08),
+             h, size=10, bold=True, color=WHITE, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    x += col_widths[ci]
+y += rh
+
+color_raci = {
+    "R": (GREEN, WHITE), "C": (RGBColor(0xFF, 0xE9, 0xC4), NAVY),
+    "I": (LIGHT, NAVY), "-": (WHITE, GREY)
+}
+
+for ri, row in enumerate(raci_data):
+    x = start_x
+    for ci, val in enumerate(row):
+        if ci == 0:
+            fill = LIGHT if ri % 2 == 0 else WHITE
+            add_rect(s, x, y, col_widths[ci], rh, fill)
+            add_text(s, x + Inches(0.1), y + Inches(0.04), col_widths[ci] - Inches(0.2), rh - Inches(0.08),
+                     val, size=10, bold=True, color=NAVY, anchor=MSO_ANCHOR.MIDDLE)
+        else:
+            fc, tc = color_raci.get(val, (LIGHT, NAVY))
+            add_rect(s, x, y, col_widths[ci], rh, fc)
+            add_text(s, x + Inches(0.05), y + Inches(0.04), col_widths[ci] - Inches(0.1), rh - Inches(0.08),
+                     val, size=11, bold=True, color=tc, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        x += col_widths[ci]
+    y += rh
+
+leg_y = y + Inches(0.2)
+add_text(s, Inches(0.5), leg_y, Inches(12), Inches(0.4),
+         "R = Realise   /   C = Consulte   /   I = Informe   /   - = Non implique",
+         size=11, color=NAVY)
+
+add_text(s, Inches(0.5), leg_y + Inches(0.5), Inches(12), Inches(0.4),
+         "RECOMMANDATION : creer un poste 'Referent aides energie' (1 ETP) pour porter la phase 2 a 6 - amorti des le 1er trimestre sur le volume vise.",
+         size=11, bold=True, color=ORANGE)
+add_footer(s, 17)
+
+# =========================================================================
+# SLIDE 18 - MATRICE PROJET x AIDES
+# =========================================================================
+s = add_blank()
+add_header(s, "17. Matrice projet x aides", "16 types de projets HUARD - toutes les aides cumulables")
+
+projets_pt = [
+    ("Relamping LED tertiaire", "ELEC", "CEE BAT-EQ-127 + 133", "30-70%"),
+    ("Chaudiere fioul -> PAC copro", "CVC", "CEE bonifie x4 + MPR Copro + POSIT'IF", "40-80%"),
+    ("PAC tertiaire >100 kW", "CVC", "CEE + Coup de pouce + Fonds Chaleur", "30-65%"),
+    ("PV autoconso 9-100 kWc", "ELEC", "Prime S26 + tarif EDF OA 20 ans", "75-85% (capex)"),
+    ("Ombrieres PV parking (APER)", "ELEC", "Prime S26 + tarif rachat + Region", "amorti 7-10 ans"),
+    ("GTB classe A (BACS)", "ELEC/CVC", "CEE BAT-TH-116 + Coup de pouce pilotage", "50-80%"),
+    ("IRVE parking entreprise", "ELEC", "ADVENIR jusqu'a 1700 EUR/point", "30-50%"),
+    ("IRVE collective copro", "ELEC", "ADVENIR 1660 EUR/point + 3000 EUR pre-equip", "40-60%"),
+    ("Raccordement reseau chaleur", "CVC", "CEE BAT-TH-127 + Fonds Chaleur + MPR Copro", "40-70%"),
+    ("Bouquet renovation DEET", "MULTI", "Coup de pouce x4 + ADEME + Region + Bpifrance", "40-70%"),
+    ("Calorifugeage chaufferie", "CVC/MAINT", "CEE BAT-TH-145 + 146", "80-100%"),
+    ("VMC double flux", "CVC", "CEE BAT-TH-125/155 + ACTEE + AIRPARIF", "25-50%"),
+    ("Variateurs moteurs industriels", "ELEC", "CEE IND-UT-103 + Tremplin + Diag Eco-Flux", "30-60%"),
+    ("Recup chaleur fatale", "CVC", "CEE IND-UT-117/102 + Fonds Chaleur + France 2030", "40-75%"),
+    ("Chaudiere -> PAC particulier", "CVC", "MPR + CEE Coup de pouce + Eco-PTZ + TVA 5,5%", "40-90%"),
+    ("Datacenter free cooling", "INFO/CVC", "CEE + Fonds Chaleur (fatale) + France 2030", "25-50%"),
+]
+
+ncols_p = 4
+col_w = [Inches(4.0), Inches(1.5), Inches(5.5), Inches(2.0)]
+hdr = ["Projet HUARD", "Activite", "Aides mobilisables", "Couverture"]
+
+x = Inches(0.4)
+y = Inches(1.3)
+rh = Inches(0.32)
+for ci, h in enumerate(hdr):
+    add_rect(s, x, y, col_w[ci], rh, NAVY)
+    add_text(s, x + Inches(0.05), y + Inches(0.03), col_w[ci] - Inches(0.1), rh - Inches(0.05),
+             h, size=10, bold=True, color=WHITE, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    x += col_w[ci]
+y += rh
+
+for ri, (proj, act, aides, cov) in enumerate(projets_pt):
+    fill = LIGHT if ri % 2 == 0 else WHITE
+    x = Inches(0.4)
+    add_rect(s, x, y, col_w[0], rh, fill)
+    add_text(s, x + Inches(0.1), y + Inches(0.03), col_w[0] - Inches(0.2), rh - Inches(0.06),
+             proj, size=9, bold=True, color=NAVY, anchor=MSO_ANCHOR.MIDDLE)
+    x += col_w[0]
+    add_rect(s, x, y, col_w[1], rh, fill)
+    add_text(s, x, y + Inches(0.03), col_w[1], rh - Inches(0.06),
+             act, size=9, color=BLUE, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    x += col_w[1]
+    add_rect(s, x, y, col_w[2], rh, fill)
+    add_text(s, x + Inches(0.1), y + Inches(0.03), col_w[2] - Inches(0.2), rh - Inches(0.06),
+             aides, size=9, color=NAVY, anchor=MSO_ANCHOR.MIDDLE)
+    x += col_w[2]
+    add_rect(s, x, y, col_w[3], rh, RGBColor(0xD9, 0xF0, 0xE3))
+    add_text(s, x, y + Inches(0.03), col_w[3], rh - Inches(0.06),
+             cov, size=9, color=GREEN, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    y += rh
+
+add_text(s, Inches(0.4), Inches(7.0), Inches(12), Inches(0.4),
+         "Detail complet et regles de cumul : voir onglet '10 - Matrice projet x aides' du classeur Excel.",
+         size=10, color=GREY)
+add_footer(s, 18)
+
+# =========================================================================
+# SLIDE 19 - BASES DE CALCUL (formules cles)
+# =========================================================================
+s = add_blank()
+add_header(s, "18. Bases de calcul", "Formules cles a memoriser pour chiffrer en 5 minutes")
+
+formules = [
+    ("CEE standard",
+     "Prime = kWh_cumac x cours_marche / 1000",
+     "Cours T2 2026 : ~7 a 10 EUR / MWh cumac",
+     BLUE),
+    ("CEE bonifie (Coup de pouce)",
+     "Prime = kWh_cumac x mult (x2 a x4) x cours / 1000",
+     "Sortie fioul = x4 - Sortie gaz = x2",
+     ORANGE),
+    ("Prime autoconso PV",
+     "Prime = EUR_par_kWc x P_kWc",
+     "Versee en 5 annuites - revision trimestrielle CRE",
+     GREEN),
+    ("Tarif EDF OA surplus",
+     "Revenu/an = kWh_vendus x tarif (20 ans)",
+     "Contrat fixe 20 ans signe a la mise en service",
+     GREEN),
+    ("ADVENIR IRVE",
+     "Aide = MIN(% HT ; plafond EUR/point)",
+     "Plafond varie selon parking : 960 a 15 000 EUR",
+     ORANGE),
+    ("Fonds Chaleur forfait",
+     "Aide = MWh_EnR/an x forfait EUR/MWh",
+     "Geothermie : 80 - Biomasse : 25-35 - Solaire thermique : 40-80",
+     RGBColor(0x82, 0xC3, 0x41)),
+    ("MaPrimeRenov Copro",
+     "Aide = % gain x cout_HT_plafonne / logement",
+     "Plafond 25 000 EUR HT/log + bonus sortie passoire",
+     RED),
+    ("TVA 5,5%",
+     "Economie = HT x 14,5%",
+     "Travaux residentiel > 2 ans - attestation client",
+     BLUE),
+    ("Bpifrance PEE",
+     "Pret 10 a 500 k EUR - taux fixe ~3-4%",
+     "Eligible si action figure dans le perimetre CEE",
+     GREEN),
+]
+
+cols_f = 3
+fw = Inches(4.2)
+fh = Inches(1.55)
+gx = Inches(0.15)
+gy = Inches(0.15)
+x0 = Inches(0.35)
+y0 = Inches(1.3)
+
+for i, (nom, formule, note, color) in enumerate(formules):
+    col = i % cols_f
+    rowf = i // cols_f
+    sx = x0 + (fw + gx) * col
+    sy = y0 + (fh + gy) * rowf
+    add_rect(s, sx, sy, fw, Inches(0.4), color)
+    add_text(s, sx + Inches(0.15), sy + Inches(0.06), fw - Inches(0.3), Inches(0.3),
+             nom, size=12, bold=True, color=WHITE)
+    add_rect(s, sx, sy + Inches(0.4), fw, fh - Inches(0.4), LIGHT)
+    add_text(s, sx + Inches(0.15), sy + Inches(0.5), fw - Inches(0.3), Inches(0.4),
+             formule, size=11, bold=True, color=NAVY)
+    add_text(s, sx + Inches(0.15), sy + Inches(0.95), fw - Inches(0.3), Inches(0.5),
+             note, size=9, color=GREY)
+
+add_text(s, Inches(0.35), Inches(6.8), Inches(12.5), Inches(0.5),
+         "Simulateurs Excel vivants disponibles dans l'onglet '12 - Simulateurs' : entrer ses valeurs, le calcul est automatique.",
+         size=11, bold=True, color=ORANGE)
+add_footer(s, 19)
+
+# =========================================================================
+# SLIDE 20 - EXEMPLE CHIFFRE 1 : PAC COPRO
+# =========================================================================
+s = add_blank()
+add_header(s, "19. Exemple chiffre 1 - PAC copropriete", "Remplacement chaudiere fioul collective - copro 50 logements")
+
+add_rect(s, Inches(0.5), Inches(1.3), Inches(5.8), Inches(5.5), NAVY)
+add_text(s, Inches(0.7), Inches(1.5), Inches(5.4), Inches(0.4),
+         "DONNEES DE BASE", size=14, bold=True, color=ORANGE)
+
+data1 = [
+    ("Nombre de logements", "50"),
+    ("Cout total chantier HT", "380 000 EUR"),
+    ("Gain energetique attendu", "50%"),
+    ("Multiplicateur Coup de pouce", "x4 (sortie fioul)"),
+    ("Plafond MPR Copro / logement", "25 000 EUR HT"),
+    ("Taux MPR (gain >= 50%)", "35%"),
+]
+y = Inches(2.0)
+for label, val in data1:
+    add_text(s, Inches(0.7), y, Inches(3.6), Inches(0.3), label, size=11, color=LIGHT)
+    add_text(s, Inches(4.3), y, Inches(2.0), Inches(0.3), val, size=11, bold=True, color=WHITE)
+    y += Inches(0.4)
+
+add_rect(s, Inches(6.5), Inches(1.3), Inches(6.3), Inches(5.5), LIGHT)
+add_text(s, Inches(6.7), Inches(1.5), Inches(5.9), Inches(0.4),
+         "CALCUL DES AIDES", size=14, bold=True, color=NAVY)
+
+calc1 = [
+    ("Prime CEE standard estimee", "35 000 EUR", NAVY),
+    ("Prime CEE bonifiee (x4)", "140 000 EUR", GREEN),
+    ("Aide MPR Copro (25 000 x 50 x 35%)", "+ 437 500 EUR HT (plafond)", GREEN),
+    ("Sous-total aides directes", "= 437 500 + 140 000 = 577 500 EUR", BLUE),
+    ("[Si Energies POSIT'IF]", "Tiers-financement du reste possible", ORANGE),
+    ("", "", None),
+    ("Reste a charge HT (sans POSIT'IF)", "= 380 000 - 380 000* = 0 EUR cash", GREEN),
+    ("* aides plafonnees au cout reel", "Le surplus aide est ecrete", GREY),
+    ("Cout par logement copro", "0 a 500 EUR / log (selon)", GREEN),
+]
+y = Inches(2.0)
+for label, val, color in calc1:
+    if color is None:
+        y += Inches(0.2)
+        continue
+    add_text(s, Inches(6.7), y, Inches(4.0), Inches(0.3), label, size=11, color=NAVY)
+    add_text(s, Inches(10.7), y, Inches(2.0), Inches(0.3), val, size=11, bold=True, color=color)
+    y += Inches(0.4)
+
+add_footer(s, 20)
+
+# =========================================================================
+# SLIDE 21 - EXEMPLE CHIFFRE 2 : PV + IRVE entreprise
+# =========================================================================
+s = add_blank()
+add_header(s, "20. Exemple chiffre 2 - PV + IRVE", "PME logistique 1500 m2 parking - 100 kWc PV + 10 bornes 22 kW")
+
+# Bloc PV
+add_rect(s, Inches(0.5), Inches(1.3), Inches(6.1), Inches(2.7), GREEN)
+add_text(s, Inches(0.7), Inches(1.4), Inches(5.7), Inches(0.4),
+         "VOLET 1 - PV autoconsommation 100 kWc", size=13, bold=True, color=WHITE)
+
+pv_data = [
+    ("Cout total HT", "110 000 EUR"),
+    ("Prime autoconso (5 ans)", "10 000 EUR (100 EUR x 100 kWc)"),
+    ("Production annuelle", "110 000 kWh"),
+    ("Revenu rachat 30% surplus", "~ 4 280 EUR / an x 20 ans"),
+    ("Economie autoconso 70%", "~ 16 200 EUR / an"),
+    ("Gain cumule 20 ans", "~ 420 000 EUR (net)"),
+    ("ROI", "~ 5 a 6 ans"),
+]
+y = Inches(1.85)
+for label, val in pv_data:
+    add_text(s, Inches(0.7), y, Inches(3.0), Inches(0.25), label, size=10, color=LIGHT)
+    add_text(s, Inches(3.7), y, Inches(2.8), Inches(0.25), val, size=10, bold=True, color=WHITE)
+    y += Inches(0.28)
+
+# Bloc IRVE
+add_rect(s, Inches(6.8), Inches(1.3), Inches(6.0), Inches(2.7), ORANGE)
+add_text(s, Inches(7.0), Inches(1.4), Inches(5.6), Inches(0.4),
+         "VOLET 2 - IRVE 10 bornes 22 kW (parking salaries)", size=13, bold=True, color=WHITE)
+
+irve_data = [
+    ("Cout total HT (10 x 3 500 EUR)", "35 000 EUR"),
+    ("Plafond ADVENIR", "1 700 EUR HT / point"),
+    ("Aide ADVENIR (10 x MIN(50% ; plafond))", "17 000 EUR HT"),
+    ("Reste a charge HT", "18 000 EUR"),
+    ("Taux de couverture", "49%"),
+    ("Suramortissement IS (40% du HT)", "~ 7 200 EUR economie fiscale"),
+    ("Reste a charge net fiscal", "~ 10 800 EUR"),
+]
+y = Inches(1.85)
+for label, val in irve_data:
+    add_text(s, Inches(7.0), y, Inches(3.2), Inches(0.25), label, size=10, color=LIGHT)
+    add_text(s, Inches(10.2), y, Inches(2.6), Inches(0.25), val, size=10, bold=True, color=WHITE)
+    y += Inches(0.28)
+
+# Bloc synthese
+add_rect(s, Inches(0.5), Inches(4.2), Inches(12.3), Inches(2.7), NAVY)
+add_text(s, Inches(0.7), Inches(4.3), Inches(11.9), Inches(0.4),
+         "SYNTHESE OFFRE GROUPEE PV + IRVE", size=15, bold=True, color=ORANGE)
+
+synthese = [
+    ("Investissement total", "145 000 EUR HT"),
+    ("Aides directes (prime PV + ADVENIR)", "27 000 EUR HT"),
+    ("Reste a charge HT", "118 000 EUR HT"),
+    ("Reste a charge net (suramortissement IRVE)", "110 800 EUR"),
+    ("Gain cumule 20 ans PV (rachat + autoconso)", "+ 420 000 EUR"),
+    ("Bilan net 20 ans", "+ 309 000 EUR pour le client"),
+]
+y = Inches(4.95)
+for label, val in synthese:
+    add_text(s, Inches(0.7), y, Inches(7.0), Inches(0.3), label, size=12, color=LIGHT)
+    color_v = GREEN if "+" in val and "EUR" in val else WHITE
+    add_text(s, Inches(7.7), y, Inches(5.0), Inches(0.3), val, size=12, bold=True, color=color_v)
+    y += Inches(0.3)
+
+add_footer(s, 21)
+
+# =========================================================================
+# SLIDE 22 - CLOTURE
 # =========================================================================
 s = add_blank()
 add_rect(s, Inches(0), Inches(0), prs.slide_width, prs.slide_height, NAVY)
 add_rect(s, Inches(0), Inches(3.4), prs.slide_width, Inches(0.08), ORANGE)
 
-add_text(s, Inches(0.8), Inches(2.3), Inches(11.5), Inches(1.0),
+add_text(s, Inches(0.8), Inches(2.0), Inches(11.5), Inches(1.0),
          "Nos clients ne paient pas le prix fort.", size=32, bold=True, color=WHITE)
-add_text(s, Inches(0.8), Inches(3.7), Inches(11.5), Inches(1.0),
+add_text(s, Inches(0.8), Inches(3.6), Inches(11.5), Inches(1.0),
          "Ils paient le delta apres aides - et HUARD le sait avant eux.",
          size=24, color=ORANGE)
 
-add_text(s, Inches(0.8), Inches(5.5), Inches(11.5), Inches(0.4),
+add_text(s, Inches(0.8), Inches(5.2), Inches(11.5), Inches(0.4),
          "Suite de ce document :", size=14, bold=True, color=WHITE)
-add_text(s, Inches(0.8), Inches(5.9), Inches(11.5), Inches(0.4),
-         "1. Classeur Excel detaille (37 dispositifs + 8 onglets)", size=12, color=LIGHT)
-add_text(s, Inches(0.8), Inches(6.2), Inches(11.5), Inches(0.4),
-         "2. Programme de formation interne 2h par equipe", size=12, color=LIGHT)
-add_text(s, Inches(0.8), Inches(6.5), Inches(11.5), Inches(0.4),
-         "3. KPIs commerciaux a integrer au reporting mensuel", size=12, color=LIGHT)
-add_text(s, Inches(0.8), Inches(6.9), Inches(11.5), Inches(0.4),
+add_text(s, Inches(0.8), Inches(5.6), Inches(11.5), Inches(0.4),
+         "1. Classeur Excel detaille - 12 onglets dont plan administratif, matrice projet x aides, bases de calcul, simulateurs vivants",
+         size=12, color=LIGHT)
+add_text(s, Inches(0.8), Inches(5.95), Inches(11.5), Inches(0.4),
+         "2. Programme de formation interne 2h par equipe (commerciaux, charges d'affaires, conduite)",
+         size=12, color=LIGHT)
+add_text(s, Inches(0.8), Inches(6.3), Inches(11.5), Inches(0.4),
+         "3. Recrutement d'un Referent Aides Energie (1 ETP) - amorti des le 1er trimestre",
+         size=12, color=LIGHT)
+add_text(s, Inches(0.8), Inches(6.65), Inches(11.5), Inches(0.4),
+         "4. KPIs commerciaux a integrer au reporting mensuel COMEX",
+         size=12, color=LIGHT)
+add_text(s, Inches(0.8), Inches(7.05), Inches(11.5), Inches(0.4),
          "Direction commerciale - Groupe HUARD - 16 mai 2026", size=10, color=GREY)
 
 prs.save(OUT)

@@ -1287,6 +1287,737 @@ for i, row in enumerate(sources[1:], start=4):
 
 set_widths(ws9, [42, 38, 70])
 
+# =========================================================================
+# 10. PLAN ADMINISTRATIF - PIPELINE 6 PHASES
+# =========================================================================
+ws10 = wb.create_sheet("09 - Plan administratif")
+ws10.sheet_view.showGridLines = False
+title_cell(ws10, "A1", "PLAN ADMINISTRATIF - PROCESS HUARD DE MONTAGE DES AIDES CLIENT", size=16)
+ws10.merge_cells("A1:G1")
+ws10.row_dimensions[1].height = 30
+
+ws10["A2"] = "Pipeline en 6 phases - de la detection a l'encaissement de l'aide par le client. RACI et delais cibles."
+ws10["A2"].font = Font(italic=True, color=GREY, size=10)
+ws10.merge_cells("A2:G2")
+
+phases_headers = ["Phase", "Delai cible", "Responsable interne", "Acteurs externes", "Actions cles", "Pieces a produire", "Point critique"]
+header_row(ws10, 4, phases_headers, fill=NAVY)
+ws10.row_dimensions[4].height = 36
+
+phases = [
+    ("PHASE 1\nDETECTION & QUALIFICATION", "J0 - J+2",
+     "Commercial terrain",
+     "Client (decideur / DAF / syndic / responsable patrimoine)",
+     "1. Visite ou RDV de qualification\n2. Identification du potentiel d'aides via la grille 'Eligibilite clients'\n3. Consultation OPERAT si tertiaire > 1000 m2\n4. Verification : batiment > 2 ans, RGE applicable, profil client",
+     "Fiche d'opportunite client (template HUARD)\nGrille de qualification d'eligibilite\nNote OPERAT si DEET",
+     "Ne JAMAIS signer de devis avant engagement CEE - sinon prime perdue."),
+
+    ("PHASE 2\nPRE-ETUDE & CHIFFRAGE", "J+3 - J+10",
+     "Charge d'affaires + Referent aides HUARD",
+     "Mandataire CEE partenaire\nBE thermique si audit",
+     "1. Visite technique chiffrage\n2. Calcul des aides : CEE (simulateur partenaire), Coup de pouce, Fonds Chaleur, ADVENIR, MPR Copro, Region\n3. Construction note d'opportunite chiffree (cout HT - aides - reste a charge - ROI)\n4. Choix du dispositif optimal (cumul vs exclusion)",
+     "Note d'opportunite chiffree\nDevis pre-detaille\nSimulation CEE / ADVENIR / Fonds Chaleur",
+     "Verifier le cumul : ADVENIR ne se cumule pas avec CEE - choisir la voie. Bonification Coup de pouce a engager avant fin de charte."),
+
+    ("PHASE 3\nCONSTITUTION DU DOSSIER", "J+10 - J+20",
+     "Service aides HUARD (referent administratif)",
+     "Mandataire CEE / EDF OA / ADEME / Bpifrance / Anah / Avere\nClient (signature mandat)",
+     "1. Signature mandat client (cession CEE, mandat ADVENIR, mandat Anah copro, etc.)\n2. Constitution dossier : devis date et signe ulterieurement, attestations RGE, audit/note de calcul, photos avant travaux, releves de compteurs, plans, references cadastrales\n3. Pour copro : vote AG, mandat syndic, PV AG\n4. Pour PV : declaration prealable, attestation Consuel, contrat raccordement Enedis",
+     "Dossier complet selon cahier des charges du dispositif\nMandats signes\nAttestations sur l'honneur\nPhotos georeferences",
+     "Toute piece manquante = rejet du dossier ou versement reduit. Checklist par dispositif obligatoire."),
+
+    ("PHASE 4\nENGAGEMENT / DEPOT", "J+15 - J+25",
+     "Service aides HUARD",
+     "Plateformes des financeurs : EMMY (CEE), ADVENIR, MyADEME, EDF OA, Anah/MPR, Bpifrance, OPERAT",
+     "1. Depot du dossier sur la plateforme du dispositif\n2. Generation de la date d'engagement CEE\n3. Apres l'attestation d'engagement : signature devis avec le client\n4. Notification au client de la prime estimee et du calendrier",
+     "Recepisse d'engagement CEE (ETOILE / SIMUL)\nNotification d'eligibilite ADVENIR\nAccord prealable Anah\nDevis signe par client (date posterieure)",
+     "ORDRE STRICT : engagement AVANT signature devis pour CEE et ADVENIR. Inversion = nullite."),
+
+    ("PHASE 5\nREALISATION DES TRAVAUX", "J+25 - J+150",
+     "Conduite de travaux HUARD + Atelier",
+     "Sous-traitants RGE\nBureau de controle si requis (Consuel, AC)",
+     "1. Execution conforme au dossier d'engagement\n2. Tracabilite : fiches techniques produits, certificats, lots\n3. Photos avant/pendant/apres georeferences\n4. PV de pose et OPR contradictoires\n5. Visite de controle ADEME / mandataire (echantillon)",
+     "Factures detaillees mentionnant marque/modele/numero de serie\nPV de pose, OPR\nBordereau de suivi des dechets (BSD)\nFiches techniques + DoP des equipements\nCertificats RGE valides a la date des travaux\nPour PV : Consuel + contrat OA",
+     "Factures detaillees obligatoires (CEE refuse les libelles generiques). Conservation 10 ans (controle a posteriori)."),
+
+    ("PHASE 6\nVERSEMENT & SUIVI", "J+150 - J+330",
+     "Service aides HUARD + Comptabilite",
+     "Mandataire CEE - ADEME - Anah - Avere - EDF OA - Bpifrance",
+     "1. Depot des pieces de cloture sur les plateformes\n2. Reception attestation de fin de travaux\n3. Versement de la prime (au client ou a HUARD en cession)\n4. Reedition factures avec mention 'finance par CEE n XXXX' si requis\n5. Suivi des controles a posteriori (3-5 ans selon dispositif)",
+     "Attestation de fin de travaux signee client\nPV reception\nFiches valorisees CEE\nReleve d'encaissement",
+     "Delai moyen versement : CEE 3-6 mois - ADVENIR 4-8 mois - Fonds Chaleur 6-12 mois - MPR Copro 6-9 mois. Provisionner la tresorerie en cas d'avance."),
+]
+
+# Couleurs par phase
+phase_colors = ["F4A261", "E76F51", "5D81A6", "2A9D8F", "82C341", "1F2F4D"]
+
+for i, phase in enumerate(phases):
+    excel_row = 5 + i
+    for ci, val in enumerate(phase, start=1):
+        c = ws10.cell(row=excel_row, column=ci, value=val)
+        c.alignment = Alignment(vertical="top", wrap_text=True)
+        c.border = border
+        c.font = Font(size=10)
+    # Phase column
+    ws10.cell(row=excel_row, column=1).fill = PatternFill("solid", fgColor=phase_colors[i])
+    ws10.cell(row=excel_row, column=1).font = Font(size=11, bold=True, color="FFFFFF")
+    ws10.cell(row=excel_row, column=1).alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    # Critical column
+    ws10.cell(row=excel_row, column=7).fill = PatternFill("solid", fgColor="FFE9C4")
+    ws10.cell(row=excel_row, column=7).font = Font(size=10, bold=True, color="8B4500")
+    ws10.row_dimensions[excel_row].height = 145
+
+set_widths(ws10, [18, 14, 22, 26, 50, 38, 38])
+
+# Bloc RACI sous le tableau
+raci_row_start = 5 + len(phases) + 2
+ws10.cell(row=raci_row_start, column=1, value="MATRICE RACI - QUI FAIT QUOI EN INTERNE HUARD").font = Font(size=14, bold=True, color="FFFFFF")
+ws10.cell(row=raci_row_start, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws10.merge_cells(start_row=raci_row_start, start_column=1, end_row=raci_row_start, end_column=7)
+ws10.row_dimensions[raci_row_start].height = 26
+
+raci_headers = ["Action", "Commercial", "Charge d'affaires", "Service aides", "Conduite travaux", "Comptabilite", "Direction"]
+header_row(ws10, raci_row_start + 1, raci_headers, fill=BLUE)
+ws10.row_dimensions[raci_row_start + 1].height = 32
+
+raci = [
+    ("Detection opportunite / qualification client", "R", "C", "I", "I", "-", "I"),
+    ("Pre-etude technique + chiffrage devis", "C", "R", "C", "C", "-", "-"),
+    ("Calcul aides + choix du dispositif", "C", "C", "R", "-", "-", "I"),
+    ("Constitution dossier administratif", "C", "C", "R", "I", "-", "-"),
+    ("Mandat client / signature", "R", "C", "C", "-", "-", "-"),
+    ("Engagement plateformes (CEE, ADVENIR...)", "I", "C", "R", "-", "-", "-"),
+    ("Signature devis (apres engagement)", "R", "C", "I", "-", "-", "I si > 100k"),
+    ("Execution travaux + tracabilite pieces", "I", "C", "I", "R", "-", "-"),
+    ("Depot pieces de cloture", "I", "C", "R", "C", "-", "-"),
+    ("Versement aide + facturation finale", "I", "I", "R", "-", "C", "-"),
+    ("Suivi controle a posteriori (3-5 ans)", "-", "-", "R", "C", "I", "-"),
+]
+
+for i, line in enumerate(raci):
+    excel_row = raci_row_start + 2 + i
+    for ci, val in enumerate(line, start=1):
+        c = ws10.cell(row=excel_row, column=ci, value=val)
+        c.border = border
+        c.font = Font(size=10, bold=(ci == 1))
+        c.alignment = Alignment(horizontal="left" if ci == 1 else "center", vertical="center", wrap_text=True)
+        if ci == 1:
+            c.font = Font(size=10, bold=True, color=NAVY)
+        else:
+            color_map = {"R": (GREEN, "FFFFFF"), "A": (ORANGE := "F4A261", "FFFFFF"), "C": ("FFE9C4", NAVY), "I": (LIGHT, NAVY), "-": ("FFFFFF", GREY)}
+            v = val if val in color_map else val.split()[0] if val.split()[0] in color_map else "-"
+            fill_c, font_c = color_map.get(v, (LIGHT, NAVY))
+            c.fill = PatternFill("solid", fgColor=fill_c)
+            c.font = Font(size=10, bold=True, color=font_c if isinstance(font_c, str) else "FFFFFF")
+    ws10.row_dimensions[excel_row].height = 22
+
+# Legende
+leg_row = raci_row_start + 2 + len(raci) + 1
+ws10.cell(row=leg_row, column=1, value="Legende RACI :").font = Font(bold=True, color=NAVY, size=10)
+ws10.cell(row=leg_row, column=2, value="R = Realise").fill = PatternFill("solid", fgColor=GREEN)
+ws10.cell(row=leg_row, column=2).font = Font(color="FFFFFF", bold=True, size=10)
+ws10.cell(row=leg_row, column=2).alignment = Alignment(horizontal="center")
+ws10.cell(row=leg_row, column=3, value="C = Consulte").fill = PatternFill("solid", fgColor="FFE9C4")
+ws10.cell(row=leg_row, column=3).font = Font(color=NAVY, bold=True, size=10)
+ws10.cell(row=leg_row, column=3).alignment = Alignment(horizontal="center")
+ws10.cell(row=leg_row, column=4, value="I = Informe").fill = PatternFill("solid", fgColor=LIGHT)
+ws10.cell(row=leg_row, column=4).font = Font(color=NAVY, bold=True, size=10)
+ws10.cell(row=leg_row, column=4).alignment = Alignment(horizontal="center")
+ws10.cell(row=leg_row, column=5, value="- = Non implique").font = Font(color=GREY, size=10)
+ws10.cell(row=leg_row, column=5).alignment = Alignment(horizontal="center")
+
+# Bloc outils & SI a mettre en place
+si_row = leg_row + 2
+ws10.cell(row=si_row, column=1, value="OUTILS & SYSTEMES D'INFORMATION A METTRE EN PLACE").font = Font(size=14, bold=True, color="FFFFFF")
+ws10.cell(row=si_row, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws10.merge_cells(start_row=si_row, start_column=1, end_row=si_row, end_column=7)
+ws10.row_dimensions[si_row].height = 26
+
+outils = [
+    ("Mandataire CEE partenaire (contrat-cadre)", "Negocier le rachat des kWh cumac (cours +/- spot marche, 7-10 EUR/MWh cumac en 2026). Choisir un mandataire avec interface web pour devis simulateur en temps reel."),
+    ("Labellisation ADVENIR (Avere-France)", "Formation 1 jour + audit qualite. Indispensable pour vendre IRVE avec aide. Cout faible, ROI immediat sur le 1er chantier."),
+    ("Simulateur CEE / ADVENIR / Fonds Chaleur interne", "Tableur ou outil web mandataire pour chiffrage commercial en 5 min. Le SIMULATEUR ci-joint (onglet 12) couvre les principaux dispositifs."),
+    ("CRM + module 'Aide & financement'", "Champ obligatoire 'aides identifiees' sur chaque devis. KPI mensuel : taux de devis comportant des aides chiffrees."),
+    ("GED dossier client (drive partage)", "Arborescence type : 01 Qualification - 02 Devis - 03 Mandats - 04 Engagement - 05 Travaux - 06 Cloture - 07 Versement. Conservation 10 ans."),
+    ("Tableau de bord commercial 'aides'", "Suivi mensuel : nombre dossiers en cours, montant aides engagees, montant verse, delais moyens, taux de rejet."),
+    ("Partenariat BE thermique (audit DEET / Decret tertiaire)", "Convention de sous-traitance ou mandat. Audit OPQIBI 1905 obligatoire pour Coup de pouce renovation tertiaire."),
+    ("Convention banque / leasing pour avance de tresorerie", "Pour les clients qui ne peuvent pas attendre 6-12 mois le versement : avance HUARD ou leasing dedie."),
+]
+
+header_row(ws10, si_row + 1, ["Outil / dispositif", "Description / mise en place", "", "", "", "", ""], fill=BLUE)
+ws10.merge_cells(start_row=si_row + 1, start_column=2, end_row=si_row + 1, end_column=7)
+ws10.row_dimensions[si_row + 1].height = 26
+
+for i, (nom, desc) in enumerate(outils):
+    er = si_row + 2 + i
+    c1 = ws10.cell(row=er, column=1, value=nom)
+    c1.font = Font(bold=True, color=NAVY, size=10)
+    c1.alignment = Alignment(vertical="top", wrap_text=True)
+    c1.border = border
+    c2 = ws10.cell(row=er, column=2, value=desc)
+    c2.font = Font(size=10)
+    c2.alignment = Alignment(vertical="top", wrap_text=True)
+    c2.border = border
+    ws10.merge_cells(start_row=er, start_column=2, end_row=er, end_column=7)
+    if i % 2 == 0:
+        for col in range(1, 8):
+            ws10.cell(row=er, column=col).fill = PatternFill("solid", fgColor=LIGHT)
+    ws10.row_dimensions[er].height = 38
+
+
+# =========================================================================
+# 11. MATRICE PROJETS X AIDES
+# =========================================================================
+ws11 = wb.create_sheet("10 - Matrice projet x aides")
+ws11.sheet_view.showGridLines = False
+title_cell(ws11, "A1", "MATRICE PROJET x AIDES MOBILISABLES", size=16)
+ws11.merge_cells("A1:J1")
+ws11.row_dimensions[1].height = 30
+ws11["A2"] = "Pour chaque type de projet HUARD : tous les dispositifs cumulables - taux de couverture moyen - bases de calcul"
+ws11["A2"].font = Font(italic=True, color=GREY, size=10)
+ws11.merge_cells("A2:J2")
+
+mat_headers = ["#", "Type de projet HUARD", "Activite", "Cible client", "CEE / Coup de pouce", "Subvention (ADEME / Anah / Region)",
+               "Tarif / Prime PV / IRVE", "Pret bonifie", "Taux de couverture moyen", "Reste a charge typique"]
+header_row(ws11, 4, mat_headers, fill=NAVY)
+ws11.row_dimensions[4].height = 40
+
+projets = [
+    (1, "Relamping LED tertiaire + gestion", "ELEC", "Bureaux, commerces, parking couvert",
+     "CEE BAT-EQ-127 + BAT-EQ-133 (gestion)", "Tremplin PME ADEME (si TPE/PME)", "-", "PEE Bpifrance",
+     "30 a 70%", "30-70% du HT"),
+    (2, "Remplacement chaudiere fioul / gaz par PAC (collectif copro)", "CVC", "Copropriete chauffage collectif",
+     "CEE BAT-TH-104 + Coup de pouce 'Chauffage tertiaire' bonifie x2-x4", "MaPrimeRenov Copro (jusqu'a 25%) + Energies POSIT'IF (tiers-financement)", "-", "Eco-PTZ copro (50k/log) + Pret Vert",
+     "40 a 80%", "20-60% du HT (souvent 0 cash via tiers-financement)"),
+    (3, "PAC tertiaire (>100 kW thermique)", "CVC", "Tertiaire DEET",
+     "CEE BAT-TH-104 + Coup de pouce", "Fonds Chaleur si EnR (geothermie)", "-", "Pret Vert Bpifrance",
+     "30 a 65%", "35-70% du HT"),
+    (4, "Installation PV autoconsommation 9-100 kWc", "ELEC", "PME tertiaire / industrie / agricole",
+     "-", "Region IDF (selon AAP)", "Prime autoconso S26 (5 ans) + Tarif EDF OA 20 ans surplus", "Pret Vert / PEE",
+     "15 a 25% (prime) + 60% revenus rachat sur 20 ans", "75-85% en capex - ROI 6-9 ans"),
+    (5, "Ombrieres PV parking (Loi APER) 100-500 kWc", "ELEC", "Hyper / logistique / industrie",
+     "-", "Region IDF + Fonds Chaleur si associee a EnR", "Prime autoconso (jusqu'a 100 kWc) + Tarif rachat 20 ans (ou AO CRE > 500 kWc)", "Pret Vert (gros volume)",
+     "10 a 30% en capex direct + revenus 20 ans", "Investissement amorti 7-10 ans"),
+    (6, "GTB classe A/B (decret BACS)", "ELEC/CVC", "Tertiaire CVC > 290 kW (2025), > 70 kW (2027)",
+     "CEE BAT-TH-116 (gros volume) + Coup de pouce 'Pilotage connecte chauffage'", "Programme ACTEE (collectivites)", "-", "PEE",
+     "50 a 80%", "20-50% du HT - obligatoire reglementairement"),
+    (7, "Bornes IRVE parking entreprise (10 a 50 points 22 kW)", "ELEC", "Tertiaire / industrie avec parking salaries",
+     "-", "Region IDF (selon AAP)", "ADVENIR jusqu'a 1700 EUR HT/point salaries (parking entreprise)", "PEE",
+     "30 a 50%", "50-70% du HT + amortissement fiscal"),
+    (8, "Bornes IRVE collective copropriete", "ELEC", "Copropriete",
+     "-", "MaPrimeRenov Copro (pour parties communes electriques)", "ADVENIR jusqu'a 1660 EUR/point + 3000 EUR pre-equipement collectif", "Eco-PTZ copro",
+     "40 a 60%", "Souvent < 500 EUR par coproprietaire equipe"),
+    (9, "Raccordement reseau de chaleur EnR&R", "CVC", "Copro / tertiaire en zone urbaine",
+     "CEE BAT-TH-127 + Coup de pouce raccordement", "Fonds Chaleur ADEME (selon reseau) + MaPrimeRenov Copro", "-", "Eco-PTZ copro",
+     "40 a 70%", "30-60% du HT"),
+    (10, "Audit + bouquet renovation tertiaire (>= 30% gain)", "MULTI", "Tertiaire DEET > 1000 m2",
+     "Coup de pouce 'Renovation performante tertiaire' (bonification jusqu'a x4)", "Region IDF + ADEME (selon AAP) + Diag Decarbon'Action Bpifrance", "-", "Pret Vert (gros)",
+     "40 a 70%", "30-60% du HT - mise en conformite DEET"),
+    (11, "Calorifugeage chaufferie collective", "CVC/MAINT", "Copro / tertiaire avec chaufferie",
+     "CEE BAT-TH-145 + BAT-TH-146", "-", "-", "-",
+     "80 a 100%", "Souvent 0 EUR pour le client"),
+    (12, "VMC double flux ecole / bureau", "CVC", "Tertiaire / etablissement scolaire",
+     "CEE BAT-TH-125 / 155", "Programme ACTEE (ecoles publiques) + Region IDF + AIRPARIF (QAI)", "-", "PEE",
+     "25 a 50%", "50-75% du HT"),
+    (13, "Variateurs vitesse sur moteurs industriels", "ELEC/MAINT", "Industrie - sites avec moteurs > 0.75 kW charge variable",
+     "CEE IND-UT-103", "Tremplin PME ADEME + Diag Eco-Flux Bpifrance", "-", "PEE",
+     "30 a 60%", "40-70% du HT - ROI < 3 ans"),
+    (14, "Recuperation chaleur fatale (compresseur, groupe froid)", "CVC/MAINT", "Industrie / datacenter",
+     "CEE IND-UT-117 / IND-UT-102", "Fonds Chaleur ADEME + Decarbonation industrie (France 2030)", "-", "Pret Vert",
+     "40 a 75%", "25-60% du HT"),
+    (15, "Remplacement chaudiere individuelle par PAC (maison)", "CVC", "Particulier proprietaire occupant",
+     "CEE BAR-TH-104 + Coup de pouce chauffage", "MaPrimeRenov par geste ou accompagne", "-", "Eco-PTZ",
+     "40 a 90% (selon revenus)", "10-60% du HT + TVA 5,5%"),
+    (16, "Datacenter - efficacite refroidissement", "INFO/CVC", "Hebergeurs, salles serveurs entreprise",
+     "CEE IND-UT-102 + fiches specifiques", "Fonds Chaleur (chaleur fatale) + France 2030", "-", "Pret Vert",
+     "25 a 50%", "50-75% du HT"),
+]
+
+cat_color_map = {"ELEC": "DCE7F3", "CVC": "D9F0E3", "ELEC/CVC": "C7D9EC", "CVC/MAINT": "D9F0E3", "ELEC/MAINT": "DCE7F3", "INFO/CVC": "EAD9F0", "MULTI": "FFE9C4"}
+
+for i, projet in enumerate(projets):
+    er = 5 + i
+    for ci, val in enumerate(projet, start=1):
+        c = ws11.cell(row=er, column=ci, value=val)
+        c.alignment = Alignment(vertical="top", wrap_text=True)
+        c.border = border
+        c.font = Font(size=10)
+        if ci == 1:
+            c.font = Font(size=11, bold=True, color="FFFFFF")
+            c.fill = PatternFill("solid", fgColor=NAVY)
+            c.alignment = Alignment(horizontal="center", vertical="center")
+        elif ci == 2:
+            c.font = Font(size=10, bold=True, color=NAVY)
+        elif ci == 3:
+            cat = str(val)
+            c.fill = PatternFill("solid", fgColor=cat_color_map.get(cat, LIGHT))
+            c.alignment = Alignment(horizontal="center", vertical="center")
+            c.font = Font(size=10, bold=True, color=NAVY)
+        elif ci == 9:
+            c.font = Font(size=10, bold=True, color=GREEN)
+            c.alignment = Alignment(horizontal="center", vertical="center")
+        elif ci == 10:
+            c.font = Font(size=10, bold=True, color="B85C00")
+        if i % 2 == 0 and ci not in (1, 3):
+            c.fill = PatternFill("solid", fgColor=LIGHT)
+    ws11.row_dimensions[er].height = 70
+
+set_widths(ws11, [5, 32, 11, 24, 32, 32, 36, 16, 16, 26])
+ws11.auto_filter.ref = f"A4:J{4 + len(projets)}"
+
+
+# =========================================================================
+# 12. BASES DE CALCUL - FORMULES PAR DISPOSITIF
+# =========================================================================
+ws12 = wb.create_sheet("11 - Bases de calcul")
+ws12.sheet_view.showGridLines = False
+title_cell(ws12, "A1", "BASES DE CALCUL DES AIDES - FORMULES & EXEMPLES", size=16)
+ws12.merge_cells("A1:F1")
+ws12.row_dimensions[1].height = 30
+ws12["A2"] = "Pour chaque dispositif : formule, parametres a recuperer, exemple chiffre - aide le commercial a estimer en 5 min."
+ws12["A2"].font = Font(italic=True, color=GREY, size=10)
+ws12.merge_cells("A2:F2")
+
+bc_headers = ["Dispositif", "Formule de calcul", "Parametres d'entree", "Unite de sortie", "Exemple chiffre", "Source du parametre"]
+header_row(ws12, 4, bc_headers, fill=NAVY)
+ws12.row_dimensions[4].height = 36
+
+bc_data = [
+    ("CEE standard (toutes fiches BAT/IND/BAR)",
+     "Prime = (kWh cumac de la fiche) x (cours marche kWh cumac) / 1000",
+     "kWh cumac : depend de la fiche + zone climatique + duree usage\nCours marche : ~7-10 EUR / MWh cumac (T2 2026, indicatif)",
+     "EUR HT",
+     "BAT-EQ-127 luminaire 60W remplace par 30W LED, zone H1, 14h/j : 8 MWh cumac x 8,5 EUR/MWh = 68 EUR / luminaire",
+     "https://emmy.atee.fr (cours) + arrete CEE (kWh cumac)"),
+
+    ("CEE bonifie - Coup de pouce",
+     "Prime = (kWh cumac fiche) x (multiplicateur 2 a 4) x cours / 1000",
+     "Multiplicateur : depend du Coup de pouce (sortie fioul x4, sortie gaz x2, etc.)",
+     "EUR HT",
+     "Coup de pouce chauffage tertiaire sortie fioul, multiplicateur x4 : prime = prime CEE de base x 4",
+     "Arrete coup de pouce en vigueur"),
+
+    ("Prime a l'autoconsommation PV (arrete S26)",
+     "Prime = (EUR / kWc selon tranche) x (P installee en kWc)",
+     "Tranche puissance + bareme trimestriel CRE",
+     "EUR (verse en 5 annuites)",
+     "PV 50 kWc : 50 x 100 EUR/kWc = 5 000 EUR sur 5 ans (T2 2026 indicatif)",
+     "Arrete tarifaire S26 - revision trimestrielle CRE"),
+
+    ("Tarif d'achat PV (EDF OA) - surplus",
+     "Revenu annuel = (kWh vendus) x (tarif EUR/kWh)",
+     "Production annuelle estimee (kWh) x part de surplus (typique 60-80%) x tarif trimestriel",
+     "EUR / an (contrat 20 ans)",
+     "PV 100 kWc Ile-de-France : ~110 000 kWh/an x 70% surplus x 0,1297 EUR/kWh = 9 980 EUR/an",
+     "EDF OA - arrete tarifaire S26"),
+
+    ("Prime ADVENIR - bornes IRVE",
+     "Aide = MIN(% HT du cout d'installation ; plafond EUR par point)",
+     "Type de parking + puissance borne + nombre de points",
+     "EUR HT",
+     "10 bornes 22 kW parking entreprise salaries : 10 x MIN(50% HT ; 1 700 EUR) = jusqu'a 17 000 EUR HT",
+     "Avere-France ADVENIR + cahier des charges en cours"),
+
+    ("Fonds Chaleur ADEME - mode forfaitaire",
+     "Aide = (MWh EnR produits / an) x (forfait EUR / MWh sur 20 ans)",
+     "Production EnR annuelle estimee + forfait selon energie (geothermie 80 EUR/MWh, biomasse 25-35 EUR/MWh)",
+     "EUR (capitalise sur 20 ans, verse a l'investissement)",
+     "Chaufferie biomasse 500 kW, 1500 MWh EnR / an : 1500 x 30 EUR = 45 000 EUR / an x 20 ans = 900 000 EUR (capitalise selon regle ADEME)",
+     "Guide Fonds Chaleur ADEME + arretes annuels"),
+
+    ("Fonds Chaleur ADEME - mode aide a l'investissement",
+     "Aide = % du capex eligible (variable selon taille entreprise et type)",
+     "Cout eligible HT + taux selon AFR + taille",
+     "EUR HT",
+     "Geothermie sondes 200 kW cout eligible 250 000 EUR HT - PME zone non AFR : 45% = 112 500 EUR",
+     "Encadrement aides d'Etat + guide ADEME"),
+
+    ("MaPrimeRenov Copropriete",
+     "Aide = (% selon gain energetique) x (cout HT plafonne par logement)",
+     "Nombre logements + gain energetique theorique + plafond travaux par logement (25 000 EUR HT/log)",
+     "EUR HT",
+     "Copro 50 logements, gain 50% : 25% x 25 000 EUR x 50 = 312 500 EUR + bonus sortie passoire",
+     "Decrets Anah - bareme MPR Copro 2026"),
+
+    ("MaPrimeRenov individuelle (parcours accompagne)",
+     "Aide = % HT plafonne selon revenus + gain energetique",
+     "Revenu fiscal de reference + gain energetique vise (35 / 50 / 65% saut classe)",
+     "EUR HT",
+     "Menage modeste, renovation gain 65% : 80% HT plafonne 70 000 EUR = jusqu'a 56 000 EUR",
+     "France Renov + bareme Anah 2026"),
+
+    ("Eco-PTZ",
+     "Pret a 0% - montant plafonne selon nombre de travaux",
+     "Type et nombre de travaux RGE",
+     "EUR (pret amortissable jusqu'a 20 ans)",
+     "Bouquet 3 travaux ou + : pret jusqu'a 50 000 EUR a 0% sur 20 ans",
+     "Banque partenaire Eco-PTZ"),
+
+    ("TVA reduite 5,5%",
+     "Economie = (HT) x (20% - 5,5%) = (HT) x 14,5%",
+     "Montant HT travaux eligibles + attestation client",
+     "EUR",
+     "Devis 10 000 EUR HT travaux PAC residentiel : economie TVA = 1 450 EUR",
+     "Art. 278-0 bis A CGI"),
+
+    ("TVA reduite 10%",
+     "Economie = (HT) x (20% - 10%) = (HT) x 10%",
+     "Montant HT travaux eligibles + attestation client",
+     "EUR",
+     "Devis 10 000 EUR HT travaux d'amelioration : economie TVA = 1 000 EUR",
+     "Art. 279-0 bis CGI"),
+
+    ("Bpifrance - Pret Economies d'Energie (PEE)",
+     "Pret bonifie - montant 10 a 500 k EUR - taux fixe ~3-4% (T2 2026)",
+     "PME > 3 ans + projet eligible CEE",
+     "EUR (pret 3 a 7 ans)",
+     "PME industrielle, projet eclairage + variateurs 150 000 EUR : PEE 150 000 EUR sur 5 ans a ~3,5% taux fixe",
+     "Bpifrance"),
+
+    ("Tremplin pour la transition ecologique PME (ADEME)",
+     "Forfait par action eligible (catalogue ~50 actions)",
+     "Type d'action + montant capex",
+     "EUR (1 000 a 200 000 EUR total cumule)",
+     "Eclairage LED PME : forfait 1 500 EUR + isolation toiture 2 000 EUR + diagnostic 1 000 EUR = 4 500 EUR",
+     "ADEME - agir transition"),
+
+    ("Region IDF - aide entreprises TEE",
+     "Subvention selon AAP (% du HT ou forfait)",
+     "Projet en IDF + PME/ETI + montant eligible HT",
+     "EUR HT",
+     "Variable selon AAP - typiquement 20-40% HT plafonne (de minimis 200 k EUR sur 3 ans)",
+     "iledefrance.fr - AAP en cours"),
+]
+
+for i, line in enumerate(bc_data):
+    er = 5 + i
+    for ci, val in enumerate(line, start=1):
+        c = ws12.cell(row=er, column=ci, value=val)
+        c.alignment = Alignment(vertical="top", wrap_text=True)
+        c.border = border
+        c.font = Font(size=10)
+        if ci == 1:
+            c.font = Font(size=10, bold=True, color=NAVY)
+        elif ci == 5:
+            c.fill = PatternFill("solid", fgColor="FFF4B8")
+            c.font = Font(size=10, italic=True, color=NAVY)
+        if i % 2 == 0 and ci not in (1, 5):
+            c.fill = PatternFill("solid", fgColor=LIGHT)
+    ws12.row_dimensions[er].height = 75
+
+set_widths(ws12, [32, 38, 34, 18, 42, 26])
+
+
+# =========================================================================
+# 13. SIMULATEURS INTERACTIFS (avec formules Excel vivantes)
+# =========================================================================
+ws13 = wb.create_sheet("12 - Simulateurs")
+ws13.sheet_view.showGridLines = False
+title_cell(ws13, "A1", "SIMULATEURS INTERACTIFS - CHIFFRAGE EXPRESS DES AIDES", size=16)
+ws13.merge_cells("A1:F1")
+ws13.row_dimensions[1].height = 30
+ws13["A2"] = "Modifier UNIQUEMENT les cases JAUNES - les cases vertes se recalculent automatiquement."
+ws13["A2"].font = Font(italic=True, color=GREY, size=10)
+ws13.merge_cells("A2:F2")
+
+YELLOW = "FFF4B8"
+GREEN_BG = "D9F0E3"
+
+def sim_input(ws, row, col, value):
+    c = ws.cell(row=row, column=col, value=value)
+    c.fill = PatternFill("solid", fgColor=YELLOW)
+    c.font = Font(bold=True, size=11, color=NAVY)
+    c.alignment = Alignment(horizontal="right", vertical="center")
+    c.border = border
+    return c
+
+def sim_output(ws, row, col, formula, fmt="#,##0 EUR"):
+    c = ws.cell(row=row, column=col, value=formula)
+    c.fill = PatternFill("solid", fgColor=GREEN_BG)
+    c.font = Font(bold=True, size=11, color=GREEN)
+    c.alignment = Alignment(horizontal="right", vertical="center")
+    c.border = border
+    c.number_format = fmt
+    return c
+
+def sim_label(ws, row, col, text, bold=True):
+    c = ws.cell(row=row, column=col, value=text)
+    c.font = Font(bold=bold, size=11, color=NAVY)
+    c.alignment = Alignment(vertical="center")
+    c.border = border
+    return c
+
+# --- SIMULATEUR 1 : CEE relamping LED bureaux ---
+r = 4
+ws13.cell(row=r, column=1, value="SIMULATEUR 1 - RELAMPING LED BUREAUX (CEE BAT-EQ-127 + BAT-EQ-133)").font = Font(size=13, bold=True, color="FFFFFF")
+ws13.cell(row=r, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws13.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws13.row_dimensions[r].height = 26
+
+r = 5
+sim_label(ws13, r, 1, "Nombre de luminaires LED remplaces")
+sim_input(ws13, r, 2, 500)
+sim_label(ws13, r, 3, "kWh cumac par luminaire (zone H1, 14h/j)", bold=False)
+sim_input(ws13, r, 4, 8000)
+sim_label(ws13, r, 5, "Cours kWh cumac (EUR/MWh cumac)", bold=False)
+sim_input(ws13, r, 6, 8.5)
+
+r = 6
+sim_label(ws13, r, 1, "Cout total HT du chantier (EUR)")
+sim_input(ws13, r, 2, 95000)
+sim_label(ws13, r, 3, "Bonification (1 = standard, 2 = coup de pouce)")
+sim_input(ws13, r, 4, 1)
+
+r = 7
+sim_label(ws13, r, 1, "Prime CEE estimee (EUR HT)")
+sim_output(ws13, r, 2, "=B5*D5*F5*D6/1000")
+sim_label(ws13, r, 3, "% de couverture du chantier")
+sim_output(ws13, r, 4, "=B7/B6", fmt="0.0%")
+
+r = 8
+sim_label(ws13, r, 1, "Reste a charge client (EUR HT)")
+sim_output(ws13, r, 2, "=B6-B7")
+sim_label(ws13, r, 3, "ROI (annees) - hypothese 30% econo / an")
+sim_output(ws13, r, 4, "=B8/(B6*0.3)", fmt="0.0 \" ans\"")
+
+# --- SIMULATEUR 2 : PV autoconsommation ---
+r = 11
+ws13.cell(row=r, column=1, value="SIMULATEUR 2 - PV AUTOCONSOMMATION (prime S26 + tarif EDF OA)").font = Font(size=13, bold=True, color="FFFFFF")
+ws13.cell(row=r, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws13.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws13.row_dimensions[r].height = 26
+
+r = 12
+sim_label(ws13, r, 1, "Puissance installee (kWc)")
+sim_input(ws13, r, 2, 100)
+sim_label(ws13, r, 3, "Prime EUR / kWc (selon tranche, T2 2026 indicatif)", bold=False)
+sim_input(ws13, r, 4, 100)
+sim_label(ws13, r, 5, "Production annuelle (kWh / kWc)", bold=False)
+sim_input(ws13, r, 6, 1100)
+
+r = 13
+sim_label(ws13, r, 1, "Cout total installation HT (EUR)")
+sim_input(ws13, r, 2, 110000)
+sim_label(ws13, r, 3, "Part autoconsommee (typique 30-60%)")
+sim_input(ws13, r, 4, 0.4)
+sim_label(ws13, r, 5, "Tarif rachat surplus (EUR/kWh)", bold=False)
+sim_input(ws13, r, 6, 0.1297)
+
+r = 14
+sim_label(ws13, r, 1, "Prix electricite achetee (EUR/kWh)")
+sim_input(ws13, r, 2, 0.21)
+
+r = 15
+sim_label(ws13, r, 1, "Prime totale autoconso (verse 5 ans)")
+sim_output(ws13, r, 2, "=B12*D12")
+sim_label(ws13, r, 3, "Production annuelle (kWh)")
+sim_output(ws13, r, 4, "=B12*F12", fmt="#,##0 \" kWh\"")
+
+r = 16
+sim_label(ws13, r, 1, "Revenu rachat surplus / an")
+sim_output(ws13, r, 2, "=D15*(1-D13)*F13")
+sim_label(ws13, r, 3, "Economie autoconso / an")
+sim_output(ws13, r, 4, "=D15*D13*B14")
+
+r = 17
+sim_label(ws13, r, 1, "Gain annuel total (revenu + econo)")
+sim_output(ws13, r, 2, "=B16+D16")
+sim_label(ws13, r, 3, "Retour sur investissement (annees)")
+sim_output(ws13, r, 4, "=(B13-B15)/B17", fmt="0.0 \" ans\"")
+
+r = 18
+sim_label(ws13, r, 1, "Gain cumule 20 ans (- prime deduite)")
+sim_output(ws13, r, 2, "=B17*20+B15")
+sim_label(ws13, r, 3, "VAN brute 20 ans")
+sim_output(ws13, r, 4, "=B18-B13")
+
+# --- SIMULATEUR 3 : Bornes IRVE ADVENIR ---
+r = 21
+ws13.cell(row=r, column=1, value="SIMULATEUR 3 - BORNES IRVE (ADVENIR - parking entreprise)").font = Font(size=13, bold=True, color="FFFFFF")
+ws13.cell(row=r, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws13.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws13.row_dimensions[r].height = 26
+
+r = 22
+sim_label(ws13, r, 1, "Nombre de points de charge")
+sim_input(ws13, r, 2, 10)
+sim_label(ws13, r, 3, "Cout HT par point (installation incluse)", bold=False)
+sim_input(ws13, r, 4, 3500)
+sim_label(ws13, r, 5, "Plafond ADVENIR EUR / point (T2 2026)", bold=False)
+sim_input(ws13, r, 6, 1700)
+
+r = 23
+sim_label(ws13, r, 1, "Taux ADVENIR (% du HT)")
+sim_input(ws13, r, 2, 0.5)
+
+r = 24
+sim_label(ws13, r, 1, "Cout total HT")
+sim_output(ws13, r, 2, "=B22*D22")
+sim_label(ws13, r, 3, "Aide ADVENIR par point")
+sim_output(ws13, r, 4, "=MIN(D22*B23,F22)")
+
+r = 25
+sim_label(ws13, r, 1, "Aide ADVENIR totale")
+sim_output(ws13, r, 2, "=B22*D24")
+sim_label(ws13, r, 3, "Reste a charge client HT")
+sim_output(ws13, r, 4, "=B24-B25")
+
+r = 26
+sim_label(ws13, r, 1, "% de couverture")
+sim_output(ws13, r, 2, "=B25/B24", fmt="0.0%")
+
+# --- SIMULATEUR 4 : Remplacement chaudiere copro par PAC ---
+r = 29
+ws13.cell(row=r, column=1, value="SIMULATEUR 4 - REMPLACEMENT CHAUDIERE FIOUL PAR PAC COLLECTIVE (copro)").font = Font(size=13, bold=True, color="FFFFFF")
+ws13.cell(row=r, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws13.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws13.row_dimensions[r].height = 26
+
+r = 30
+sim_label(ws13, r, 1, "Nombre de logements")
+sim_input(ws13, r, 2, 50)
+sim_label(ws13, r, 3, "Cout total HT chantier (EUR)", bold=False)
+sim_input(ws13, r, 4, 380000)
+sim_label(ws13, r, 5, "Gain energetique (>= 35% requis MPR)", bold=False)
+sim_input(ws13, r, 6, 0.5)
+
+r = 31
+sim_label(ws13, r, 1, "Prime CEE BAT-TH-104 (estimee)")
+sim_input(ws13, r, 2, 35000)
+sim_label(ws13, r, 3, "Multiplicateur Coup de pouce sortie fioul")
+sim_input(ws13, r, 4, 4)
+
+r = 32
+sim_label(ws13, r, 1, "Plafond MPR Copro EUR / logement HT")
+sim_input(ws13, r, 2, 25000)
+sim_label(ws13, r, 3, "Taux MPR (selon gain >= 50%)")
+sim_input(ws13, r, 4, 0.35)
+
+r = 33
+sim_label(ws13, r, 1, "Prime CEE bonifiee")
+sim_output(ws13, r, 2, "=B31*D31")
+sim_label(ws13, r, 3, "Aide MPR Copro estimee")
+sim_output(ws13, r, 4, "=MIN(B30*B32,D30)*D32")
+
+r = 34
+sim_label(ws13, r, 1, "Total aides cumulees")
+sim_output(ws13, r, 2, "=B33+D33")
+sim_label(ws13, r, 3, "Reste a charge HT")
+sim_output(ws13, r, 4, "=D30-B34")
+
+r = 35
+sim_label(ws13, r, 1, "% couverture")
+sim_output(ws13, r, 2, "=B34/D30", fmt="0.0%")
+sim_label(ws13, r, 3, "Reste par logement (HT)")
+sim_output(ws13, r, 4, "=D34/B30")
+
+# --- SIMULATEUR 5 : GTB BACS (BAT-TH-116) ---
+r = 38
+ws13.cell(row=r, column=1, value="SIMULATEUR 5 - GTB CLASSE A (BAT-TH-116 - decret BACS)").font = Font(size=13, bold=True, color="FFFFFF")
+ws13.cell(row=r, column=1).fill = PatternFill("solid", fgColor=NAVY)
+ws13.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws13.row_dimensions[r].height = 26
+
+r = 39
+sim_label(ws13, r, 1, "Surface chauffee (m2)")
+sim_input(ws13, r, 2, 5000)
+sim_label(ws13, r, 3, "Forfait kWh cumac / m2 (classe A bureaux)", bold=False)
+sim_input(ws13, r, 4, 1850)
+sim_label(ws13, r, 5, "Cours kWh cumac (EUR/MWh)", bold=False)
+sim_input(ws13, r, 6, 8.5)
+
+r = 40
+sim_label(ws13, r, 1, "Cout total GTB HT (EUR)")
+sim_input(ws13, r, 2, 180000)
+
+r = 41
+sim_label(ws13, r, 1, "Prime CEE BAT-TH-116 estimee")
+sim_output(ws13, r, 2, "=B39*D39*F39/1000")
+sim_label(ws13, r, 3, "% couverture")
+sim_output(ws13, r, 4, "=B41/B40", fmt="0.0%")
+
+r = 42
+sim_label(ws13, r, 1, "Reste a charge HT")
+sim_output(ws13, r, 2, "=B40-B41")
+sim_label(ws13, r, 3, "ROI (hypothese 25% econo conso CVC + eclairage)")
+sim_output(ws13, r, 4, "=B42/(B40*0.25)", fmt="0.0 \" ans\"")
+
+# --- Legende ---
+r = 45
+ws13.cell(row=r, column=1, value="LEGENDE").font = Font(bold=True, color=NAVY, size=11)
+r = 46
+c = ws13.cell(row=r, column=1, value="CASE JAUNE = parametre a entrer")
+c.fill = PatternFill("solid", fgColor=YELLOW)
+c.border = border
+c.font = Font(bold=True, color=NAVY, size=10)
+c = ws13.cell(row=r, column=3, value="CASE VERTE = calcul automatique")
+c.fill = PatternFill("solid", fgColor=GREEN_BG)
+c.border = border
+c.font = Font(bold=True, color=GREEN, size=10)
+
+r = 47
+ws13.cell(row=r, column=1, value="Avertissement : barèmes indicatifs T2 2026. Verifier les cours CEE (EMMY.atee.fr) et tarifs PV (CRE) avant tout engagement client.").font = Font(italic=True, color=GREY, size=10)
+ws13.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+
+set_widths(ws13, [36, 16, 36, 16, 36, 16])
+for r in range(5, 43):
+    if ws13.cell(row=r, column=1).value is not None:
+        ws13.row_dimensions[r].height = 26
+
+# Mettre a jour le sommaire pour pointer vers les nouveaux onglets
+ws_sommaire = wb["Sommaire"]
+
+# Demerger l'avertissement avant d'ajouter
+for mr in list(ws_sommaire.merged_cells.ranges):
+    if mr.min_row >= 23:
+        ws_sommaire.unmerge_cells(str(mr))
+
+# Effacer ancien avertissement
+for r in range(23, 32):
+    for col in range(2, 9):
+        cell = ws_sommaire.cell(row=r, column=col)
+        cell.value = None
+        cell.fill = PatternFill(fill_type=None)
+
+# Ajout des 4 nouveaux onglets dans le sommaire
+sommaire_supp = [
+    ("09", "Plan administratif aide client", "Pipeline 6 phases + RACI interne + outils/SI a mettre en place"),
+    ("10", "Matrice projet x aides", "16 types de projets HUARD avec aides cumulables, couverture moyenne, reste a charge"),
+    ("11", "Bases de calcul", "Formules detaillees par dispositif + parametres d'entree + exemples chiffres"),
+    ("12", "Simulateurs interactifs", "5 simulateurs Excel vivants : LED, PV, IRVE, PAC copro, GTB BACS - entrer ses valeurs"),
+]
+for i, (n, t, d) in enumerate(sommaire_supp, start=21):
+    c1 = ws_sommaire.cell(row=i, column=2, value=n)
+    c1.alignment = Alignment(horizontal="center", vertical="center")
+    c1.border = border
+    c2 = ws_sommaire.cell(row=i, column=3, value=t)
+    c2.font = Font(bold=True, color=NAVY)
+    c2.border = border
+    c3 = ws_sommaire.cell(row=i, column=4, value=d)
+    c3.alignment = Alignment(vertical="center", wrap_text=True)
+    c3.border = border
+    ws_sommaire.row_dimensions[i].height = 28
+
+# Avertissement decalé apres
+ws_sommaire["B27"] = "AVERTISSEMENT"
+ws_sommaire["B27"].font = Font(bold=True, color="FFFFFF")
+ws_sommaire["B27"].fill = PatternFill("solid", fgColor=RED)
+ws_sommaire.merge_cells("B27:H27")
+
+avert = (
+    "Les montants, plafonds et conditions d'eligibilite sont ceux en vigueur au 16/05/2026. "
+    "Les baremes CEE (bonifications, coups de pouce), les arretes tarifaires PV (S21/S26) et les enveloppes ADEME "
+    "evoluent chaque trimestre voire chaque mois. AVANT TOUT ENGAGEMENT COMMERCIAL CHIFFRE, valider les montants "
+    "actualises aupres de : (1) le mandataire CEE partenaire, (2) ADEME / Bpifrance pour les subventions, "
+    "(3) la Region IDF pour les aides regionales. Document non contractuel - usage interne strict."
+)
+ws_sommaire["B28"] = avert
+ws_sommaire["B28"].font = Font(size=10, italic=True, color=GREY)
+ws_sommaire["B28"].alignment = Alignment(wrap_text=True, vertical="top")
+ws_sommaire.merge_cells("B28:H31")
+for r in range(28, 32):
+    ws_sommaire.row_dimensions[r].height = 22
+
 # Sauvegarde
 wb.save(OUT)
 print(f"OK -> {OUT}")
