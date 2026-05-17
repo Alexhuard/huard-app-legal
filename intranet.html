@@ -2,8 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Intranet — Groupe HUARD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F2F4D">
+<title>Tableau de bord — HUARD GROUPE</title>
 <link rel="stylesheet" href="intranet.css">
 </head>
 <body data-page="accueil">
@@ -12,212 +13,244 @@
 <div id="app-nav"></div>
 
 <div class="container">
-  <h1 class="page-title">Tableau de bord</h1>
-  <p class="page-subtitle">Bienvenue Alexandre — voici un aperçu de l'activité interne du Groupe HUARD.</p>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Dimanche 17 mai 2026</div>
+      <h1 class="hero-title">Bonjour Alexandre</h1>
+      <p class="hero-subtitle">Voici un aperçu de l'activité interne du Groupe HUARD : 23 chantiers en cours, 7 demandes RH à traiter et 12 devis en attente de validation.</p>
+    </div>
+  </section>
 
   <div class="stats">
     <div class="stat">
-      <div class="stat-label">Chantiers en cours</div>
+      <div class="stat-head">
+        <div class="stat-label">Chantiers</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/></svg></div>
+      </div>
       <div class="stat-value">23</div>
       <div class="stat-delta">+2 cette semaine</div>
     </div>
     <div class="stat">
-      <div class="stat-label">Demandes RH</div>
+      <div class="stat-head">
+        <div class="stat-label">Demandes RH</div>
+        <div class="stat-icon warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+      </div>
       <div class="stat-value">7</div>
-      <div class="stat-delta" style="color:var(--warning)">3 en attente</div>
+      <div class="stat-delta warn">3 en attente</div>
     </div>
     <div class="stat">
-      <div class="stat-label">Tickets IT ouverts</div>
+      <div class="stat-head">
+        <div class="stat-label">Tickets IT</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></div>
+      </div>
       <div class="stat-value">4</div>
       <div class="stat-delta">−1 depuis hier</div>
     </div>
     <div class="stat">
-      <div class="stat-label">Devis à valider</div>
+      <div class="stat-head">
+        <div class="stat-label">Devis à valider</div>
+        <div class="stat-icon danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      </div>
       <div class="stat-value">12</div>
-      <div class="stat-delta" style="color:var(--warning)">5 urgents</div>
+      <div class="stat-delta warn">5 urgents</div>
     </div>
   </div>
 
   <div class="card">
-    <h2>Accès rapides</h2>
-    <div class="actions">
-      <a href="pointage.html" class="action">
-        <div class="action-icon">⏱</div>
-        <div class="action-label">Pointage</div>
-      </a>
-      <a href="conges.html" class="action">
-        <div class="action-icon">📅</div>
-        <div class="action-label">Congés</div>
-      </a>
-      <a href="notes-de-frais.html" class="action">
-        <div class="action-icon">💶</div>
-        <div class="action-label">Notes de frais</div>
-      </a>
-      <a href="bulletins.html" class="action">
-        <div class="action-icon">📄</div>
-        <div class="action-label">Bulletins de paie</div>
-      </a>
-      <a href="bons-intervention.html" class="action">
-        <div class="action-icon">🛠</div>
-        <div class="action-label">Bons d'intervention</div>
-      </a>
-      <a href="stock.html" class="action">
-        <div class="action-icon">📦</div>
-        <div class="action-label">Stock matériel</div>
-      </a>
-      <a href="annuaire.html" class="action">
-        <div class="action-icon">📞</div>
-        <div class="action-label">Annuaire</div>
-      </a>
-      <a href="ticket-it.html" class="action">
-        <div class="action-icon">🎫</div>
-        <div class="action-label">Ticket IT</div>
-      </a>
+    <div class="card-header">
+      <h2 class="card-title">Accès rapides</h2>
     </div>
+    <div class="actions" id="quickActions"></div>
   </div>
 
   <div class="grid-2">
     <div>
       <div class="card">
-        <h2>Chantiers en cours <a class="link" href="chantiers.html">Voir tout →</a></h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Référence</th>
-              <th>Client</th>
-              <th>Métier</th>
-              <th>Avancement</th>
-              <th>Statut</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>CH-2026-0142</strong></td>
-              <td>Hôpital Sud Francilien</td>
-              <td>CVC</td>
-              <td>72 %</td>
-              <td><span class="badge badge-success">En cours</span></td>
-            </tr>
-            <tr>
-              <td><strong>CH-2026-0138</strong></td>
-              <td>Logements Bièvres</td>
-              <td>Courant Fort</td>
-              <td>34 %</td>
-              <td><span class="badge badge-success">En cours</span></td>
-            </tr>
-            <tr>
-              <td><strong>CH-2026-0131</strong></td>
-              <td>Campus Saclay</td>
-              <td>RTM Neophone / Informatique</td>
-              <td>91 %</td>
-              <td><span class="badge badge-warning">Réception</span></td>
-            </tr>
-            <tr>
-              <td><strong>CH-2026-0127</strong></td>
-              <td>Centre commercial Évry 2</td>
-              <td>Sûreté / CFA</td>
-              <td>—</td>
-              <td><span class="badge badge-info">Contrat annuel</span></td>
-            </tr>
-            <tr>
-              <td><strong>CH-2026-0125</strong></td>
-              <td>Bureaux La Défense T3</td>
-              <td>CVC / Courant Fort</td>
-              <td>18 %</td>
-              <td><span class="badge badge-success">En cours</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="card-header">
+          <h2 class="card-title">Chantiers en cours</h2>
+          <a class="card-link" href="chantiers.html">Voir tous →</a>
+        </div>
+        <div class="card-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Client</th>
+                <th>Métier</th>
+                <th style="width:120px">Avancement</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CH-2026-0142</strong></td>
+                <td>Hôpital Sud Francilien</td>
+                <td><span class="service-pill">CVC</span></td>
+                <td>72 %<div class="progress"><div class="progress-bar" style="width:72%"></div></div></td>
+                <td><span class="badge badge-success">En cours</span></td>
+              </tr>
+              <tr>
+                <td><strong>CH-2026-0138</strong></td>
+                <td>Logements Bièvres</td>
+                <td><span class="service-pill">CFO</span></td>
+                <td>34 %<div class="progress"><div class="progress-bar" style="width:34%"></div></div></td>
+                <td><span class="badge badge-success">En cours</span></td>
+              </tr>
+              <tr>
+                <td><strong>CH-2026-0131</strong></td>
+                <td>Campus Saclay</td>
+                <td><span class="service-pill">RTM</span></td>
+                <td>91 %<div class="progress"><div class="progress-bar warn" style="width:91%"></div></div></td>
+                <td><span class="badge badge-warning">Réception</span></td>
+              </tr>
+              <tr>
+                <td><strong>CH-2026-0127</strong></td>
+                <td>Centre commercial Évry 2</td>
+                <td><span class="service-pill">Sûreté</span></td>
+                <td><span style="color:var(--text-subtle)">—</span></td>
+                <td><span class="badge badge-info">Contrat annuel</span></td>
+              </tr>
+              <tr>
+                <td><strong>CH-2026-0125</strong></td>
+                <td>Bureaux La Défense T3</td>
+                <td><span class="service-pill">CVC / CFO</span></td>
+                <td>18 %<div class="progress"><div class="progress-bar" style="width:18%"></div></div></td>
+                <td><span class="badge badge-success">En cours</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="card">
-        <h2>Actualités internes <a class="link" href="documents.html">Toutes les actus →</a></h2>
-        <div class="news-item">
-          <div class="news-date">15 mai 2026 · Direction</div>
-          <div class="news-title">Nouvelle version de l'application mobile Groupe HUARD</div>
-          <p class="news-body">La v2.1 est disponible sur le Play Store : refonte de la fiche contact et nouvelle section recrutement.</p>
+        <div class="card-header">
+          <h2 class="card-title">Actualités internes</h2>
+          <a class="card-link" href="documents.html">Toutes les actus →</a>
         </div>
         <div class="news-item">
-          <div class="news-date">12 mai 2026 · Comptabilité (S. BRICAUD)</div>
-          <div class="news-title">Pont de l'Ascension — fermeture des bureaux jeudi 14 et vendredi 15 mai</div>
-          <p class="news-body">Les astreintes Alarme (poste 6129) et RTM (poste 6128) restent joignables 24/7 pour les interventions urgentes.</p>
+          <div class="news-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">15 mai 2026 · Direction</div>
+            <h3 class="news-title">Nouvelle version de l'application mobile Groupe HUARD</h3>
+            <p class="news-body">La v2.1 est disponible sur le Play Store : refonte de la fiche contact et nouvelle section recrutement.</p>
+          </div>
         </div>
         <div class="news-item">
-          <div class="news-date">5 mai 2026 · CFO (P. SALLE)</div>
-          <div class="news-title">Rappel : formation habilitations électriques B2V / BR</div>
-          <p class="news-body">Inscriptions ouvertes jusqu'au 20 mai pour la session de juin. Voir l'onglet RH → Formations.</p>
+          <div class="news-icon warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">12 mai 2026 · Comptabilité — S. BRICAUD</div>
+            <h3 class="news-title">Pont de l'Ascension — fermeture des bureaux jeudi 14 et vendredi 15 mai</h3>
+            <p class="news-body">Les astreintes Alarme (poste 6129) et RTM (poste 6128) restent joignables 24/7 pour les interventions urgentes.</p>
+          </div>
         </div>
         <div class="news-item">
-          <div class="news-date">28 avril 2026 · Informatique (E. DURAND)</div>
-          <div class="news-title">Migration de la messagerie vers Microsoft 365</div>
-          <p class="news-body">Bascule prévue le week-end du 7 juin. Une procédure de configuration mobile sera envoyée d'ici fin mai.</p>
+          <div class="news-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">5 mai 2026 · CFO — P. SALLE</div>
+            <h3 class="news-title">Formation habilitations électriques B2V / BR</h3>
+            <p class="news-body">Inscriptions ouvertes jusqu'au 20 mai pour la session de juin. Voir l'onglet RH → Formations.</p>
+          </div>
+        </div>
+        <div class="news-item">
+          <div class="news-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">28 avril 2026 · Informatique — E. DURAND</div>
+            <h3 class="news-title">Migration de la messagerie vers Microsoft 365</h3>
+            <p class="news-body">Bascule prévue le week-end du 7 juin. Une procédure de configuration mobile sera envoyée d'ici fin mai.</p>
+          </div>
         </div>
       </div>
     </div>
 
     <div>
       <div class="card">
-        <h2>Mes tâches</h2>
-        <table>
-          <tbody>
-            <tr>
-              <td>Valider 3 demandes de congés</td>
-              <td style="text-align:right"><span class="badge badge-warning">Aujourd'hui</span></td>
-            </tr>
-            <tr>
-              <td>Signer devis CH-2026-0145</td>
-              <td style="text-align:right"><span class="badge badge-warning">Urgent</span></td>
-            </tr>
-            <tr>
-              <td>Réunion hebdo chefs de chantier</td>
-              <td style="text-align:right"><span class="badge badge-info">Lundi 9h</span></td>
-            </tr>
-            <tr>
-              <td>Relire note de service congés été</td>
-              <td style="text-align:right"><span class="badge badge-info">Cette semaine</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="card-header">
+          <h2 class="card-title">Mes tâches</h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">Valider 3 demandes de congés</span>
+            <span class="badge badge-warning">Aujourd'hui</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">Signer devis CH-2026-0145</span>
+            <span class="badge badge-danger">Urgent</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">Réunion hebdo chefs de chantier</span>
+            <span class="badge badge-info">Lundi 9h</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;">
+            <span style="font-size:13px">Relire note de service congés été</span>
+            <span class="badge badge-neutral">Cette semaine</span>
+          </div>
+        </div>
       </div>
 
       <div class="card">
-        <h2>Documents récents <a class="link" href="documents.html">GED →</a></h2>
-        <table>
-          <tbody>
-            <tr><td>📄 Note de service — Congés été 2026.pdf</td></tr>
-            <tr><td>📊 Bilan chantier CH-0131 Saclay.xlsx</td></tr>
-            <tr><td>📄 Convention collective BTP — MAJ.pdf</td></tr>
-            <tr><td>📋 Plan de prévention Hôpital Sud.docx</td></tr>
-            <tr><td>📄 Procédure habilitation électrique.pdf</td></tr>
-          </tbody>
-        </table>
+        <div class="card-header">
+          <h2 class="card-title">Documents récents</h2>
+          <a class="card-link" href="documents.html">GED →</a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="documents.html" style="display:flex; gap:10px; padding:8px; border-radius:8px; text-decoration:none; color:var(--text); font-size:13px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-subtle); flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Note de service — Congés été 2026.pdf
+          </a>
+          <a href="documents.html" style="display:flex; gap:10px; padding:8px; border-radius:8px; text-decoration:none; color:var(--text); font-size:13px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success); flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Bilan chantier CH-0131 Saclay.xlsx
+          </a>
+          <a href="documents.html" style="display:flex; gap:10px; padding:8px; border-radius:8px; text-decoration:none; color:var(--text); font-size:13px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-subtle); flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Convention collective BTP — MAJ.pdf
+          </a>
+          <a href="documents.html" style="display:flex; gap:10px; padding:8px; border-radius:8px; text-decoration:none; color:var(--text); font-size:13px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--info); flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Plan de prévention Hôpital Sud.docx
+          </a>
+        </div>
       </div>
 
       <div class="card">
-        <h2>Contacts clés <a class="link" href="annuaire.html">Annuaire complet →</a></h2>
+        <div class="card-header">
+          <h2 class="card-title">Contacts clés</h2>
+          <a class="card-link" href="annuaire.html">Annuaire →</a>
+        </div>
         <div id="keyContacts"></div>
       </div>
 
-      <div class="card" style="background:var(--navy); color:white; border:none;">
-        <h2 style="color:white">Astreintes 24/7</h2>
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #3A4A6A">
+      <div class="card dark-card">
+        <div class="card-header">
+          <h2 class="card-title">Astreintes 24/7</h2>
+        </div>
+        <div class="row-item">
           <div>
-            <div style="font-weight:600">Astreinte Alarme</div>
-            <div style="font-size:12px; color:#B8C5D9">Sûreté / CFA</div>
+            <div class="name">Astreinte Alarme</div>
+            <div class="sub">Sûreté / CFA</div>
           </div>
           <div style="text-align:right">
-            <div style="font-weight:600">poste 6129</div>
-            <div style="font-size:12px; color:#B8C5D9">01 73 23 61 29</div>
+            <div class="tel">poste 6129</div>
+            <div class="tel-sub"><a href="tel:+33173236129">01 73 23 61 29</a></div>
           </div>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0">
+        <div class="row-item">
           <div>
-            <div style="font-weight:600">Astreinte RTM</div>
-            <div style="font-size:12px; color:#B8C5D9">Téléphonie / Réseau</div>
+            <div class="name">Astreinte RTM</div>
+            <div class="sub">Téléphonie / Réseau</div>
           </div>
           <div style="text-align:right">
-            <div style="font-weight:600">poste 6128</div>
-            <div style="font-size:12px; color:#B8C5D9">01 73 23 61 28</div>
+            <div class="tel">poste 6128</div>
+            <div class="tel-sub"><a href="tel:+33173236128">01 73 23 61 28</a></div>
           </div>
         </div>
       </div>
@@ -229,24 +262,43 @@
 
 <script src="intranet.js"></script>
 <script>
-  // Inject 5 key managers into "Contacts clés"
   document.addEventListener('DOMContentLoaded', () => {
+    // Quick actions with SVG icons
+    const quick = [
+      { icon: 'clock',     label: 'Pointage',       sub: 'Saisir mes heures',     href: 'pointage.html' },
+      { icon: 'calendar',  label: 'Congés / RTT',   sub: '12 j disponibles',      href: 'conges.html' },
+      { icon: 'euro',      label: 'Notes de frais', sub: 'Déposer une note',      href: 'notes-de-frais.html' },
+      { icon: 'fileText',  label: 'Bulletins',      sub: 'Mes bulletins de paie', href: 'bulletins.html' },
+      { icon: 'tool',      label: 'Bons d\\'interv.', sub: 'Maintenance / SAV',   href: 'bons-intervention.html' },
+      { icon: 'package',   label: 'Stock matériel', sub: 'Dépôt HUARD',           href: 'stock.html' },
+      { icon: 'phone',     label: 'Annuaire',       sub: '30 contacts internes',  href: 'annuaire.html' },
+      { icon: 'ticket',    label: 'Ticket IT',      sub: 'Support informatique',  href: 'ticket-it.html' },
+    ];
+    document.getElementById('quickActions').innerHTML = quick.map(q => `
+      <a href="${q.href}" class="action">
+        <div class="action-icon">${ICON[q.icon]}</div>
+        <div>
+          <div class="action-label">${q.label}</div>
+          <div class="action-sub">${q.sub}</div>
+        </div>
+      </a>
+    `).join('');
+
+    // Key contacts
     const keys = ['Sylvie BRICAUD', 'Eric DURAND', 'Philippe SALLE', 'Eric ANACLET', 'Maxime HUGUET'];
-    const wrap = document.getElementById('keyContacts');
-    const html = keys.map(n => {
+    document.getElementById('keyContacts').innerHTML = keys.map(n => {
       const p = HUARD_STAFF.find(s => s.nom === n);
       if (!p) return '';
-      const initials = p.nom.split(' ').map(x => x[0]).join('').slice(0, 2);
       return `
         <div class="contact">
-          <div class="contact-avatar">${initials}</div>
-          <div style="flex:1">
+          <div class="contact-avatar">${initialsOf(p.nom)}</div>
+          <div class="contact-info">
             <div class="contact-name">${p.nom}</div>
             <div class="contact-role">${p.role} · poste ${p.ext}</div>
           </div>
+          <a class="contact-tel" href="${telHref(p.tel)}">${p.tel}</a>
         </div>`;
     }).join('');
-    wrap.innerHTML = html;
   });
 </script>
 
