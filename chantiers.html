@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chantiers — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
+<body data-page="chantiers">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <strong>Chantiers</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Chantiers</h1>
+  <p class="page-subtitle">Suivi de tous les chantiers en cours par métier : CVC, Courant Fort, Sûreté/CFA, RTM Neophone.</p>
+
+  <div class="card">
+    <h2>Tous les chantiers</h2>
+    <table>
+      <thead>
+        <tr><th>Référence</th><th>Client</th><th>Métier</th><th>Conducteur de travaux</th><th>Avancement</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>CH-2026-0142</strong></td><td>Hôpital Sud Francilien</td><td>CVC</td><td>M. CELANO (poste 6107)</td><td>72 %</td><td><span class="badge badge-success">En cours</span></td></tr>
+        <tr><td><strong>CH-2026-0138</strong></td><td>Logements Bièvres</td><td>Courant Fort</td><td>P. LEVEQUE (poste 6121)</td><td>34 %</td><td><span class="badge badge-success">En cours</span></td></tr>
+        <tr><td><strong>CH-2026-0131</strong></td><td>Campus Saclay</td><td>RTM Neophone</td><td>J. HENG (poste 6118)</td><td>91 %</td><td><span class="badge badge-warning">Réception</span></td></tr>
+        <tr><td><strong>CH-2026-0127</strong></td><td>Centre commercial Évry 2</td><td>Sûreté / CFA</td><td>S. SAAVEDRA (poste 6124)</td><td>—</td><td><span class="badge badge-info">Contrat annuel</span></td></tr>
+        <tr><td><strong>CH-2026-0125</strong></td><td>Bureaux La Défense T3</td><td>CVC / Courant Fort</td><td>F. FIDALGO (poste 6123)</td><td>18 %</td><td><span class="badge badge-success">En cours</span></td></tr>
+        <tr><td><strong>CH-2026-0119</strong></td><td>Lycée Polyvalent Évry</td><td>CVC</td><td>M. CELANO (poste 6107)</td><td>54 %</td><td><span class="badge badge-success">En cours</span></td></tr>
+        <tr><td><strong>CH-2026-0115</strong></td><td>Résidence séniors Massy</td><td>Courant Fort / CFA</td><td>P. LEVEQUE (poste 6121)</td><td>88 %</td><td><span class="badge badge-warning">Réception</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stub">
+    <div class="stub-icon">🏗</div>
+    <h3>Module suivi chantier — version complète à venir</h3>
+    <p>Le suivi détaillé (planning, avancement par lot, photos chantier, plans, levée de réserves) sera intégré dans une prochaine version. Pour l'instant, contactez directement le conducteur de travaux.</p>
+    <div class="link-list">
+      <a href="annuaire.html">Voir l'annuaire</a>
+      <a href="intranet.html" class="secondary">Retour à l'accueil</a>
+    </div>
+  </div>
+</div>
+
+<div id="app-footer"></div>
+<script src="intranet.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
+<body data-page="maintenance">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <strong>Maintenance</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Maintenance &amp; SAV</h1>
+  <p class="page-subtitle">Contrats de maintenance, planification des interventions et suivi des bons d'intervention.</p>
+
+  <div class="card">
+    <h2>Astreintes 24/7</h2>
+    <table>
+      <tbody>
+        <tr><td><strong>Astreinte Alarme</strong> — Sûreté / CFA</td><td>poste 6129</td><td><a href="tel:+33173236129" style="color:var(--blue)">01 73 23 61 29</a></td></tr>
+        <tr><td><strong>Astreinte RTM</strong> — Téléphonie / Réseau</td><td>poste 6128</td><td><a href="tel:+33173236128" style="color:var(--blue)">01 73 23 61 28</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Contrats de maintenance actifs</h2>
+    <table>
+      <thead>
+        <tr><th>Client</th><th>Périmètre</th><th>Renouvellement</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Centre commercial Évry 2</td><td>Sûreté / Alarme intrusion</td><td>31/12/2026</td><td><span class="badge badge-success">Actif</span></td></tr>
+        <tr><td>Hôpital Sud Francilien</td><td>CVC / Chaufferie</td><td>30/06/2026</td><td><span class="badge badge-warning">À renouveler</span></td></tr>
+        <tr><td>Campus Saclay</td><td>Téléphonie / Réseau</td><td>31/12/2027</td><td><span class="badge badge-success">Actif</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stub">
+    <div class="stub-icon">🔧</div>
+    <h3>Planification GMAO à venir</h3>
+    <p>Le module de planification des interventions de maintenance préventive et corrective sera connecté à la GMAO interne.</p>
+    <div class="link-list">
+      <a href="bons-intervention.html">Bons d'intervention</a>
+      <a href="intranet.html" class="secondary">Retour à l'accueil</a>
+    </div>
+  </div>
+</div>
+
+<div id="app-footer"></div>
+<script src="intranet.js"></script>
+</body>
+</html>

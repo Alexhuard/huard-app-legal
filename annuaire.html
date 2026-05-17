@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annuaire — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+<style>
+  .filters { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filters input, .filters select { width: auto; flex: 1; min-width: 200px; }
+  .service-pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: var(--light); color: var(--blue); }
+  .tel-link { color: var(--navy); text-decoration: none; font-weight: 500; }
+  .tel-link:hover { color: var(--blue); }
+  .count { color: var(--muted); font-size: 13px; margin-left: 8px; font-weight: 400; }
+</style>
+</head>
+<body data-page="annuaire">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <strong>Annuaire</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Annuaire interne <span class="count" id="count"></span></h1>
+  <p class="page-subtitle">Tous les contacts internes du Groupe HUARD. Cliquez sur un numéro pour lancer un appel depuis votre softphone.</p>
+
+  <div class="card">
+    <div class="filters">
+      <input type="search" id="search" placeholder="Rechercher un nom, un rôle, un poste…" autofocus>
+      <select id="service">
+        <option value="">Tous les services</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Rôle</th>
+          <th>Service</th>
+          <th>Poste</th>
+          <th>N° externe</th>
+        </tr>
+      </thead>
+      <tbody id="staffBody"></tbody>
+    </table>
+    <div class="empty" id="emptyMsg" style="display:none">Aucun résultat pour cette recherche.</div>
+  </div>
+</div>
+
+<div id="app-footer"></div>
+
+<script src="intranet.js"></script>
+<script>
+  function render(filter, service) {
+    const f = (filter || '').trim().toLowerCase();
+    const s = service || '';
+    const filtered = HUARD_STAFF.filter(p => {
+      if (s && p.service !== s) return false;
+      if (!f) return true;
+      return (p.nom + ' ' + p.role + ' ' + p.service + ' ' + p.ext).toLowerCase().includes(f);
+    });
+    const body = document.getElementById('staffBody');
+    const empty = document.getElementById('emptyMsg');
+    document.getElementById('count').textContent = filtered.length + ' contact' + (filtered.length > 1 ? 's' : '');
+    if (filtered.length === 0) {
+      body.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    body.innerHTML = filtered.map(p => `
+      <tr>
+        <td><strong>${p.nom}</strong></td>
+        <td>${p.role || '—'}</td>
+        <td><span class="service-pill">${p.service}</span></td>
+        <td><strong>${p.ext}</strong></td>
+        <td><a class="tel-link" href="tel:+33${p.tel.replace(/[^0-9]/g, '').slice(1)}">${p.tel}</a></td>
+      </tr>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const services = [...new Set(HUARD_STAFF.map(p => p.service))];
+    const sel = document.getElementById('service');
+    services.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      sel.appendChild(opt);
+    });
+    const search = document.getElementById('search');
+    const update = () => render(search.value, sel.value);
+    search.addEventListener('input', update);
+    sel.addEventListener('change', update);
+    render('', '');
+  });
+</script>
+
+</body>
+</html>

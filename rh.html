@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RH — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
+<body data-page="rh">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <strong>Ressources Humaines</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Ressources Humaines</h1>
+  <p class="page-subtitle">Toutes vos démarches administratives en un seul endroit. Les demandes sont transmises à votre responsable hiérarchique et au service Comptabilité.</p>
+
+  <div class="card">
+    <h2>Démarches en ligne</h2>
+    <div class="actions">
+      <a href="conges.html" class="action">
+        <div class="action-icon">📅</div>
+        <div class="action-label">Congés / RTT</div>
+      </a>
+      <a href="notes-de-frais.html" class="action">
+        <div class="action-icon">💶</div>
+        <div class="action-label">Notes de frais</div>
+      </a>
+      <a href="pointage.html" class="action">
+        <div class="action-icon">⏱</div>
+        <div class="action-label">Pointage</div>
+      </a>
+      <a href="bulletins.html" class="action">
+        <div class="action-icon">📄</div>
+        <div class="action-label">Bulletins de paie</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h2>Mon solde de congés</h2>
+        <table>
+          <tbody>
+            <tr><td>Congés payés acquis</td><td style="text-align:right"><strong>27 j</strong></td></tr>
+            <tr><td>Congés pris</td><td style="text-align:right">12 j</td></tr>
+            <tr><td>Congés en attente</td><td style="text-align:right">3 j</td></tr>
+            <tr><td><strong>Solde disponible</strong></td><td style="text-align:right"><strong style="color:var(--success)">12 j</strong></td></tr>
+            <tr><td>RTT restantes</td><td style="text-align:right">4 j</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Notes et documents RH</h2>
+        <table>
+          <tbody>
+            <tr><td>📄 Note de service — Congés été 2026.pdf</td></tr>
+            <tr><td>📄 Convention collective BTP — MAJ.pdf</td></tr>
+            <tr><td>📋 Formation habilitations électriques B2V / BR</td></tr>
+            <tr><td>📄 Procédure note de frais.pdf</td></tr>
+            <tr><td>📄 Règlement intérieur HUARD GROUPE.pdf</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Contacts Comptabilité</h2>
+        <div id="comptaContacts"></div>
+      </div>
+
+      <div class="card" style="background:var(--light)">
+        <h2 style="margin-bottom:8px">Une question RH ?</h2>
+        <p style="margin:0; font-size:13px; color:var(--muted)">Le standard répond du lundi au vendredi de 8h à 18h.</p>
+        <div style="margin-top:12px; font-size:14px;">
+          <strong>Standard HUARD</strong><br>
+          <a href="tel:+33173236100" style="color:var(--blue); text-decoration:none">01 73 23 61 00</a> · poste 6100
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app-footer"></div>
+
+<script src="intranet.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrap = document.getElementById('comptaContacts');
+    wrap.innerHTML = HUARD_STAFF.filter(p => p.service === 'Comptabilité').map(p => {
+      const initials = p.nom.split(' ').map(x => x[0]).join('').slice(0, 2);
+      return `
+        <div class="contact">
+          <div class="contact-avatar">${initials}</div>
+          <div style="flex:1">
+            <div class="contact-name">${p.nom}</div>
+            <div class="contact-role">${p.role} · poste ${p.ext}</div>
+          </div>
+          <a href="tel:+33${p.tel.replace(/[^0-9]/g, '').slice(1)}" style="color:var(--blue); font-size:12px; text-decoration:none">${p.tel}</a>
+        </div>`;
+    }).join('');
+  });
+</script>
+
+</body>
+</html>

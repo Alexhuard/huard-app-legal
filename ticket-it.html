@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket Support IT — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
+<body data-page="support-it">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <a href="support-it.html">Support IT</a> · <strong>Nouveau ticket</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Ouvrir un ticket Support IT</h1>
+  <p class="page-subtitle">Décrivez votre demande. Elle sera transmise à E. DURAND (Responsable IT, poste 6113) et à l'équipe Informatique.</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h2>Nouveau ticket</h2>
+        <form id="ticketForm">
+          <div class="field">
+            <label for="reporter">Demandeur</label>
+            <input id="reporter" name="reporter" type="text" required placeholder="Prénom Nom">
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="category">Catégorie</label>
+              <select id="category" name="category" required>
+                <option>Poste de travail / Bureautique</option>
+                <option>Messagerie Microsoft 365</option>
+                <option>Téléphonie / Softphone</option>
+                <option>VPN / Accès distant</option>
+                <option>Réseau / Wifi</option>
+                <option>Imprimante / Scanner</option>
+                <option>Mot de passe / Compte</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="priority">Priorité</label>
+              <select id="priority" name="priority" required>
+                <option value="basse">Basse — pas bloquant</option>
+                <option value="normale" selected>Normale</option>
+                <option value="haute">Haute — gêne mon travail</option>
+                <option value="critique">Critique — je ne peux plus travailler</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="subject">Sujet</label>
+            <input id="subject" name="subject" type="text" required placeholder="Résumé en une phrase">
+          </div>
+
+          <div class="field">
+            <label for="description">Description détaillée</label>
+            <textarea id="description" name="description" required placeholder="Décrivez le problème, les étapes pour le reproduire, les messages d'erreur, etc."></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:8px">
+            <button type="submit">Envoyer le ticket</button>
+            <button type="reset" class="secondary">Réinitialiser</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Mes tickets récents</h2>
+        <div id="historyWrap">
+          <div class="empty" id="emptyMsg">Aucun ticket pour l'instant.</div>
+          <table id="historyTable" style="display:none">
+            <thead><tr><th>N°</th><th>Sujet</th><th>Priorité</th><th>Statut</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="background:#FCF1E3; border-color:#E8C99A">
+        <h2 style="color:var(--warning); margin-bottom:8px">⚠ Urgence hors horaires</h2>
+        <p style="margin:0; font-size:13px;">Panne téléphonie ou réseau bloquante en dehors des heures de bureau :</p>
+        <div style="margin-top:10px;">
+          <strong>Astreinte RTM</strong> · <a href="tel:+33173236128" style="color:var(--navy)">01 73 23 61 28</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">OK</div>
+<div id="app-footer"></div>
+
+<script src="intranet.js"></script>
+<script>
+  const KEY = 'huard.itTickets';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  const save = (v) => localStorage.setItem(KEY, JSON.stringify(v));
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function priorityBadge(p) {
+    const map = {
+      basse: 'badge-info',
+      normale: 'badge-info',
+      haute: 'badge-warning',
+      critique: 'badge-danger',
+    };
+    return `<span class="badge ${map[p] || 'badge-info'}">${p}</span>`;
+  }
+
+  function render() {
+    const list = load();
+    const empty = document.getElementById('emptyMsg');
+    const table = document.getElementById('historyTable');
+    const body = document.getElementById('historyBody');
+    if (list.length === 0) { empty.style.display = 'block'; table.style.display = 'none'; return; }
+    empty.style.display = 'none'; table.style.display = 'table';
+    body.innerHTML = list.slice().reverse().map(t => `
+      <tr>
+        <td><strong>${t.ref}</strong></td>
+        <td>${t.subject}</td>
+        <td>${priorityBadge(t.priority)}</td>
+        <td><span class="badge badge-info">Ouvert</span></td>
+      </tr>
+    `).join('');
+  }
+
+  document.getElementById('ticketForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const list = load();
+    const ref = 'TIK-' + new Date().getFullYear() + '-' + String(list.length + 1).padStart(4, '0');
+    list.push({
+      ref,
+      reporter: f.reporter.value,
+      category: f.category.value,
+      priority: f.priority.value,
+      subject: f.subject.value,
+      description: f.description.value,
+      createdAt: new Date().toISOString(),
+    });
+    save(list);
+    toast('Ticket ' + ref + ' envoyé à l\'équipe IT ✓');
+    f.reset();
+    render();
+  });
+
+  render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achats & Devis — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
+<body data-page="achats">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <strong>Achats &amp; Devis</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Achats &amp; Devis</h1>
+  <p class="page-subtitle">Demandes d'achat, suivi des commandes fournisseurs et validation des devis.</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="stub">
+        <div class="stub-icon">🛒</div>
+        <h3>Module Achats en cours de développement</h3>
+        <p>La saisie des demandes d'achat, le rapprochement bon de commande / facture et le workflow de validation seront intégrés ici. En attendant, transmettez vos demandes au service Achats par mail ou téléphone.</p>
+        <div class="link-list">
+          <a href="annuaire.html">Voir l'annuaire</a>
+          <a href="intranet.html" class="secondary">Retour à l'accueil</a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Équipe Achats</h2>
+        <div id="achatsTeam"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app-footer"></div>
+<script src="intranet.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('achatsTeam').innerHTML = HUARD_STAFF.filter(p => p.service === 'Achats').map(p => {
+      const initials = p.nom.split(' ').map(x => x[0]).join('').slice(0, 2);
+      return `
+        <div class="contact">
+          <div class="contact-avatar">${initials}</div>
+          <div style="flex:1">
+            <div class="contact-name">${p.nom}</div>
+            <div class="contact-role">${p.role} · poste ${p.ext}</div>
+          </div>
+          <a href="tel:+33${p.tel.replace(/[^0-9]/g, '').slice(1)}" style="color:var(--blue); font-size:12px; text-decoration:none">${p.tel}</a>
+        </div>`;
+    }).join('');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support IT — Intranet HUARD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
+<body data-page="support-it">
+
+<div id="app-header"></div>
+<div id="app-nav"></div>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <strong>Support Informatique</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Support Informatique</h1>
+  <p class="page-subtitle">Service Informatique du Groupe HUARD — assistance utilisateurs, postes de travail, messagerie, réseau, téléphonie.</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h2>Ouvrir un ticket</h2>
+        <p style="margin-top:0; color:var(--muted); font-size:14px">Décrivez votre demande pour qu'elle soit prise en charge par l'équipe IT.</p>
+        <div style="margin-top:16px">
+          <a href="ticket-it.html" style="display:inline-block; background:var(--navy); color:white; text-decoration:none; padding:12px 20px; border-radius:6px; font-weight:600; font-size:14px">Créer un ticket →</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Procédures fréquentes</h2>
+        <table>
+          <tbody>
+            <tr><td>📄 Configuration messagerie Microsoft 365 (mobile)</td></tr>
+            <tr><td>📄 Connexion VPN HUARD depuis l'extérieur</td></tr>
+            <tr><td>📄 Réinitialisation mot de passe Active Directory</td></tr>
+            <tr><td>📄 Procédure changement de poste de travail</td></tr>
+            <tr><td>📄 Utilisation du softphone Neophone</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="background:#FCF1E3; border-color:#E8C99A">
+        <h2 style="color:var(--warning); margin-bottom:8px">⚠ Astreinte technique</h2>
+        <p style="margin:0; font-size:13px;">En cas de panne réseau ou téléphonie en dehors des heures de bureau :</p>
+        <div style="margin-top:10px; font-size:14px;">
+          <strong>Astreinte RTM</strong> · poste 6128 · <a href="tel:+33173236128" style="color:var(--navy)">01 73 23 61 28</a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Équipe Informatique</h2>
+        <div id="itContacts"></div>
+      </div>
+
+      <div class="card">
+        <h2>Équipe RTM Neophone (Téléphonie)</h2>
+        <div id="rtmContacts"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app-footer"></div>
+
+<script src="intranet.js"></script>
+<script>
+  function renderTeam(slotId, service) {
+    document.getElementById(slotId).innerHTML = HUARD_STAFF.filter(p => p.service === service).map(p => {
+      const initials = p.nom.split(' ').map(x => x[0]).join('').slice(0, 2);
+      return `
+        <div class="contact">
+          <div class="contact-avatar">${initials}</div>
+          <div style="flex:1">
+            <div class="contact-name">${p.nom}</div>
+            <div class="contact-role">${p.role || '—'} · poste ${p.ext}</div>
+          </div>
+          <a href="tel:+33${p.tel.replace(/[^0-9]/g, '').slice(1)}" style="color:var(--blue); font-size:12px; text-decoration:none">${p.tel}</a>
+        </div>`;
+    }).join('');
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTeam('itContacts', 'Informatique');
+    renderTeam('rtmContacts', 'RTM Neophone');
+  });
+</script>
+
+</body>
+</html>
