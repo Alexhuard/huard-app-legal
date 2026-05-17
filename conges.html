@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande de congés — Intranet HUARD</title>
+<style>
+  :root {
+    --navy: #1F2F4D;
+    --blue: #5D81A6;
+    --light: #E8EEF5;
+    --muted: #5A6478;
+    --bg: #F5F8FC;
+    --white: #FFFFFF;
+    --border: #D9E2EF;
+    --success: #2F8F5C;
+    --warning: #C77B2C;
+    --danger: #B33A3A;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--navy); line-height: 1.5; }
+  header { background: var(--navy); color: var(--white); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { width: 40px; height: 40px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+  .brand-title { font-size: 18px; font-weight: 600; }
+  .brand-subtitle { font-size: 12px; color: #B8C5D9; }
+  nav.crumbs { background: var(--white); border-bottom: 1px solid var(--border); padding: 12px 32px; font-size: 13px; color: var(--muted); }
+  nav.crumbs a { color: var(--blue); text-decoration: none; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 32px; }
+  .page-title { margin: 0 0 4px 0; font-size: 24px; }
+  .page-subtitle { color: var(--muted); margin: 0 0 24px 0; font-size: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } header, nav.crumbs, .container { padding-left: 16px; padding-right: 16px; } }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+  .card h2 { margin: 0 0 16px 0; font-size: 16px; }
+
+  .field { margin-bottom: 16px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--navy); }
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+    font-family: inherit; font-size: 14px; color: var(--navy); background: var(--white);
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(93, 129, 166, 0.15); }
+  textarea { resize: vertical; min-height: 80px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  button {
+    background: var(--navy); color: white; border: none; padding: 12px 20px;
+    border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: inherit;
+  }
+  button:hover { background: #2A3A5A; }
+  button.secondary { background: var(--white); color: var(--navy); border: 1px solid var(--border); }
+  button.secondary:hover { background: var(--light); }
+
+  .summary { background: var(--light); padding: 12px 14px; border-radius: 6px; font-size: 14px; margin-bottom: 16px; }
+  .summary strong { color: var(--blue); font-size: 18px; }
+
+  .toast {
+    position: fixed; top: 20px; right: 20px; background: var(--success); color: white;
+    padding: 14px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 14px; font-weight: 500; opacity: 0; transform: translateY(-10px);
+    transition: opacity 0.2s, transform 0.2s; z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 8px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 8px; border-bottom: 1px solid var(--light); }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge-info { background: var(--light); color: var(--blue); }
+  .badge-success { background: #E5F4EC; color: var(--success); }
+  .empty { text-align: center; color: var(--muted); padding: 24px; font-size: 13px; }
+  .del { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 12px; padding: 4px 8px; }
+  .del:hover { text-decoration: underline; }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">H</div>
+    <div>
+      <div class="brand-title">Intranet Groupe HUARD</div>
+      <div class="brand-subtitle">Demande de congés</div>
+    </div>
+  </div>
+</header>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <a href="#">RH</a> · <strong>Demande de congés</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Nouvelle demande de congés</h1>
+  <p class="page-subtitle">Remplissez le formulaire ci-dessous. Votre responsable sera notifié pour validation.</p>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>Formulaire</h2>
+        <form id="leaveForm">
+          <div class="field">
+            <label for="name">Nom du collaborateur</label>
+            <input id="name" name="name" type="text" required placeholder="Prénom Nom">
+          </div>
+
+          <div class="field">
+            <label for="type">Type d'absence</label>
+            <select id="type" name="type" required>
+              <option value="Congés payés">Congés payés (CP)</option>
+              <option value="RTT">RTT</option>
+              <option value="Congé sans solde">Congé sans solde</option>
+              <option value="Congé familial">Congé familial / événement</option>
+              <option value="Maladie">Arrêt maladie</option>
+              <option value="Récupération">Récupération heures</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="start">Du</label>
+              <input id="start" name="start" type="date" required>
+            </div>
+            <div class="field">
+              <label for="end">Au</label>
+              <input id="end" name="end" type="date" required>
+            </div>
+          </div>
+
+          <div class="summary" id="summary">
+            Durée : <strong id="days">—</strong> jour(s) ouvré(s)
+          </div>
+
+          <div class="field">
+            <label for="manager">Responsable à notifier</label>
+            <select id="manager" name="manager" required>
+              <option value="Jean Martin">Jean Martin — Directeur travaux</option>
+              <option value="Marie Dupont">Marie Dupont — Responsable RH</option>
+              <option value="Nicolas Garnier">Nicolas Garnier — Chef d'équipe maintenance</option>
+              <option value="Sophie Leroy">Sophie Leroy — Comptabilité</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="comment">Motif / commentaire (optionnel)</label>
+            <textarea id="comment" name="comment" placeholder="Précisions éventuelles à transmettre à votre responsable"></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:20px">
+            <button type="submit">Envoyer la demande</button>
+            <button type="reset" class="secondary">Réinitialiser</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Solde de congés</h2>
+        <table>
+          <tbody>
+            <tr><td>Congés payés acquis</td><td style="text-align:right"><strong>27 j</strong></td></tr>
+            <tr><td>Congés pris</td><td style="text-align:right">12 j</td></tr>
+            <tr><td>Congés en attente</td><td style="text-align:right">3 j</td></tr>
+            <tr><td><strong>Solde disponible</strong></td><td style="text-align:right"><strong style="color:var(--success)">12 j</strong></td></tr>
+            <tr><td>RTT restantes</td><td style="text-align:right">4 j</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Mes demandes récentes</h2>
+        <div id="historyWrap">
+          <div class="empty" id="emptyMsg">Aucune demande enregistrée pour l'instant.</div>
+          <table id="historyTable" style="display:none">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Période</th>
+                <th>Jours</th>
+                <th>Statut</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">Demande envoyée ✓</div>
+
+<footer>
+  © Groupe HUARD — Intranet interne · <a href="intranet.html" style="color:var(--blue)">Retour à l'accueil</a>
+</footer>
+
+<script>
+  const STORAGE_KEY = 'huard.leaveRequests';
+
+  function workingDays(start, end) {
+    if (!start || !end) return 0;
+    const s = new Date(start), e = new Date(end);
+    if (e < s) return 0;
+    let count = 0;
+    const d = new Date(s);
+    while (d <= e) {
+      const day = d.getDay();
+      if (day !== 0 && day !== 6) count++;
+      d.setDate(d.getDate() + 1);
+    }
+    return count;
+  }
+
+  function updateSummary() {
+    const start = document.getElementById('start').value;
+    const end = document.getElementById('end').value;
+    document.getElementById('days').textContent = workingDays(start, end) || '—';
+  }
+  document.getElementById('start').addEventListener('change', updateSummary);
+  document.getElementById('end').addEventListener('change', updateSummary);
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveHistory(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function renderHistory() {
+    const list = loadHistory();
+    const empty = document.getElementById('emptyMsg');
+    const table = document.getElementById('historyTable');
+    const body = document.getElementById('historyBody');
+    if (list.length === 0) {
+      empty.style.display = 'block';
+      table.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    table.style.display = 'table';
+    body.innerHTML = list.slice().reverse().map(r => `
+      <tr>
+        <td>${r.type}</td>
+        <td>${formatDate(r.start)} → ${formatDate(r.end)}</td>
+        <td>${r.days}</td>
+        <td><span class="badge badge-info">En attente</span></td>
+        <td><button class="del" data-id="${r.id}">Supprimer</button></td>
+      </tr>
+    `).join('');
+    body.querySelectorAll('.del').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        saveHistory(loadHistory().filter(r => r.id !== id));
+        renderHistory();
+      });
+    });
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  document.getElementById('leaveForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const days = workingDays(f.start.value, f.end.value);
+    if (days <= 0) { toast('Période invalide'); return; }
+    const list = loadHistory();
+    list.push({
+      id: String(Date.now()),
+      name: f.name.value,
+      type: f.type.value,
+      start: f.start.value,
+      end: f.end.value,
+      days: days,
+      manager: f.manager.value,
+      comment: f.comment.value,
+      createdAt: new Date().toISOString(),
+    });
+    saveHistory(list);
+    toast('Demande envoyée à ' + f.manager.value + ' ✓');
+    f.reset();
+    updateSummary();
+    renderHistory();
+  });
+
+  renderHistory();
+</script>
+
+</body>
+</html>

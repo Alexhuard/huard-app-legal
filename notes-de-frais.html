@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes de frais — Intranet HUARD</title>
+<style>
+  :root {
+    --navy: #1F2F4D;
+    --blue: #5D81A6;
+    --light: #E8EEF5;
+    --muted: #5A6478;
+    --bg: #F5F8FC;
+    --white: #FFFFFF;
+    --border: #D9E2EF;
+    --success: #2F8F5C;
+    --warning: #C77B2C;
+    --danger: #B33A3A;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--navy); line-height: 1.5; }
+  header { background: var(--navy); color: var(--white); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { width: 40px; height: 40px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+  .brand-title { font-size: 18px; font-weight: 600; }
+  .brand-subtitle { font-size: 12px; color: #B8C5D9; }
+  nav.crumbs { background: var(--white); border-bottom: 1px solid var(--border); padding: 12px 32px; font-size: 13px; color: var(--muted); }
+  nav.crumbs a { color: var(--blue); text-decoration: none; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 32px; }
+  .page-title { margin: 0 0 4px 0; font-size: 24px; }
+  .page-subtitle { color: var(--muted); margin: 0 0 24px 0; font-size: 14px; }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+  .card h2 { margin: 0 0 16px 0; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
+
+  .field { margin-bottom: 16px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--navy); }
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+    font-family: inherit; font-size: 14px; color: var(--navy); background: var(--white);
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(93, 129, 166, 0.15); }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 700px) {
+    .row3, .row2 { grid-template-columns: 1fr; }
+    header, nav.crumbs, .container { padding-left: 16px; padding-right: 16px; }
+  }
+
+  button {
+    background: var(--navy); color: white; border: none; padding: 12px 20px;
+    border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  button:hover { background: #2A3A5A; }
+  button.secondary { background: var(--white); color: var(--navy); border: 1px solid var(--border); }
+  button.secondary:hover { background: var(--light); }
+  button.small { padding: 6px 12px; font-size: 12px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 8px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 8px; border-bottom: 1px solid var(--light); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .totals { background: var(--light); padding: 14px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 15px; }
+  .totals strong { color: var(--navy); font-size: 20px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge-info { background: var(--light); color: var(--blue); }
+  .badge-warning { background: #FCF1E3; color: var(--warning); }
+  .empty { text-align: center; color: var(--muted); padding: 24px; font-size: 13px; }
+  .del { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 12px; padding: 4px 8px; }
+  .del:hover { text-decoration: underline; }
+
+  .toast {
+    position: fixed; top: 20px; right: 20px; background: var(--success); color: white;
+    padding: 14px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 14px; font-weight: 500; opacity: 0; transform: translateY(-10px);
+    transition: opacity 0.2s, transform 0.2s; z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">H</div>
+    <div>
+      <div class="brand-title">Intranet Groupe HUARD</div>
+      <div class="brand-subtitle">Notes de frais</div>
+    </div>
+  </div>
+</header>
+
+<nav class="crumbs">
+  <a href="intranet.html">Accueil intranet</a> · <a href="#">RH</a> · <strong>Notes de frais</strong>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Ajouter une note de frais</h1>
+  <p class="page-subtitle">Saisissez chaque dépense professionnelle. Joignez le justificatif (facture, ticket) lors du dépôt papier ou via la GED.</p>
+
+  <div class="card">
+    <h2>Nouvelle ligne de frais</h2>
+    <form id="expenseForm">
+      <div class="row3">
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="category">Catégorie</label>
+          <select id="category" name="category" required>
+            <option>Repas / Restauration</option>
+            <option>Carburant</option>
+            <option>Péage / Parking</option>
+            <option>Hébergement</option>
+            <option>Transport (train, avion)</option>
+            <option>Achat matériel chantier</option>
+            <option>Fournitures bureau</option>
+            <option>Téléphone / Internet</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="project">Chantier / Imputation</label>
+          <select id="project" name="project" required>
+            <option value="">— Sélectionner —</option>
+            <option>CH-2026-0142 · Hôpital Sud Francilien</option>
+            <option>CH-2026-0138 · Logements Bièvres</option>
+            <option>CH-2026-0131 · Campus Saclay</option>
+            <option>CH-2026-0127 · CC Évry 2</option>
+            <option>CH-2026-0125 · Bureaux La Défense T3</option>
+            <option>Frais généraux / Siège</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row3">
+        <div class="field">
+          <label for="amount">Montant TTC (€)</label>
+          <input id="amount" name="amount" type="number" min="0" step="0.01" required placeholder="0,00">
+        </div>
+        <div class="field">
+          <label for="tva">TVA (%)</label>
+          <select id="tva" name="tva">
+            <option value="20">20 %</option>
+            <option value="10">10 %</option>
+            <option value="5.5">5,5 %</option>
+            <option value="0">0 % / non récupérable</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="payment">Moyen de paiement</label>
+          <select id="payment" name="payment">
+            <option>Carte pro</option>
+            <option>Avance personnelle</option>
+            <option>Espèces</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="desc">Description</label>
+        <input id="desc" name="desc" type="text" required placeholder="Ex : Repas équipe chantier Saclay (3 personnes)">
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:8px">
+        <button type="submit">Ajouter la ligne</button>
+        <button type="reset" class="secondary">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>
+      Lignes de la note en cours
+      <span id="countLabel" style="font-size:12px; color:var(--muted); font-weight:400"></span>
+    </h2>
+    <div id="listWrap">
+      <div class="empty" id="emptyMsg">Aucune ligne pour l'instant — ajoutez votre première dépense ci-dessus.</div>
+      <table id="listTable" style="display:none">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Catégorie</th>
+            <th>Description</th>
+            <th>Chantier</th>
+            <th class="num">TTC</th>
+            <th class="num">HT</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <div class="totals">
+      <div>Total HT : <strong id="totalHT">0,00 €</strong></div>
+      <div>TVA récupérable : <strong id="totalTVA">0,00 €</strong></div>
+      <div>Total TTC : <strong id="totalTTC">0,00 €</strong></div>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap">
+      <button id="submitNote">Déposer la note de frais</button>
+      <button id="clearAll" class="secondary">Vider la liste</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Mes notes déposées</h2>
+    <div id="historyWrap">
+      <div class="empty" id="historyEmpty">Aucune note déposée pour l'instant.</div>
+      <table id="historyTable" style="display:none">
+        <thead>
+          <tr><th>N°</th><th>Date dépôt</th><th>Nb lignes</th><th class="num">Total TTC</th><th>Statut</th></tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">OK</div>
+
+<footer>
+  © Groupe HUARD — Intranet interne · <a href="intranet.html" style="color:var(--blue)">Retour à l'accueil</a>
+</footer>
+
+<script>
+  const LINES_KEY = 'huard.expense.lines';
+  const NOTES_KEY = 'huard.expense.notes';
+
+  const eur = (n) => (n || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'2-digit' }) : '';
+
+  function load(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
+  function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function renderLines() {
+    const list = load(LINES_KEY);
+    const body = document.getElementById('listBody');
+    const table = document.getElementById('listTable');
+    const empty = document.getElementById('emptyMsg');
+    const count = document.getElementById('countLabel');
+
+    let totalTTC = 0, totalHT = 0, totalTVA = 0;
+    list.forEach(l => {
+      totalTTC += l.amount;
+      const ht = l.amount / (1 + l.tva/100);
+      totalHT += ht;
+      totalTVA += l.amount - ht;
+    });
+
+    if (list.length === 0) {
+      empty.style.display = 'block';
+      table.style.display = 'none';
+      count.textContent = '';
+    } else {
+      empty.style.display = 'none';
+      table.style.display = 'table';
+      count.textContent = `(${list.length} ligne${list.length>1?'s':''})`;
+      body.innerHTML = list.map(l => {
+        const ht = l.amount / (1 + l.tva/100);
+        return `<tr>
+          <td>${fmtDate(l.date)}</td>
+          <td>${l.category}</td>
+          <td>${l.desc}</td>
+          <td style="font-size:12px;color:var(--muted)">${l.project}</td>
+          <td class="num">${eur(l.amount)}</td>
+          <td class="num">${eur(ht)}</td>
+          <td><button class="del" data-id="${l.id}">×</button></td>
+        </tr>`;
+      }).join('');
+      body.querySelectorAll('.del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          save(LINES_KEY, load(LINES_KEY).filter(l => l.id !== btn.dataset.id));
+          renderLines();
+        });
+      });
+    }
+
+    document.getElementById('totalTTC').textContent = eur(totalTTC);
+    document.getElementById('totalHT').textContent = eur(totalHT);
+    document.getElementById('totalTVA').textContent = eur(totalTVA);
+  }
+
+  function renderHistory() {
+    const notes = load(NOTES_KEY);
+    const empty = document.getElementById('historyEmpty');
+    const table = document.getElementById('historyTable');
+    const body = document.getElementById('historyBody');
+    if (notes.length === 0) {
+      empty.style.display = 'block';
+      table.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    table.style.display = 'table';
+    body.innerHTML = notes.slice().reverse().map(n => `
+      <tr>
+        <td><strong>${n.ref}</strong></td>
+        <td>${fmtDate(n.submittedAt)}</td>
+        <td>${n.lines.length}</td>
+        <td class="num">${eur(n.totalTTC)}</td>
+        <td><span class="badge badge-warning">En validation</span></td>
+      </tr>
+    `).join('');
+  }
+
+  document.getElementById('expenseForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const list = load(LINES_KEY);
+    list.push({
+      id: String(Date.now()),
+      date: f.date.value,
+      category: f.category.value,
+      project: f.project.value,
+      amount: parseFloat(f.amount.value),
+      tva: parseFloat(f.tva.value),
+      payment: f.payment.value,
+      desc: f.desc.value,
+    });
+    save(LINES_KEY, list);
+    f.reset();
+    renderLines();
+    toast('Ligne ajoutée ✓');
+  });
+
+  document.getElementById('clearAll').addEventListener('click', () => {
+    if (load(LINES_KEY).length === 0) return;
+    if (confirm('Vider toutes les lignes en cours ?')) {
+      save(LINES_KEY, []);
+      renderLines();
+    }
+  });
+
+  document.getElementById('submitNote').addEventListener('click', () => {
+    const lines = load(LINES_KEY);
+    if (lines.length === 0) { toast('Ajoutez au moins une ligne'); return; }
+    const totalTTC = lines.reduce((s, l) => s + l.amount, 0);
+    const notes = load(NOTES_KEY);
+    const ref = 'NDF-' + new Date().getFullYear() + '-' + String(notes.length + 1).padStart(4, '0');
+    notes.push({
+      ref,
+      submittedAt: new Date().toISOString(),
+      lines,
+      totalTTC,
+    });
+    save(NOTES_KEY, notes);
+    save(LINES_KEY, []);
+    renderLines();
+    renderHistory();
+    toast('Note ' + ref + ' déposée ✓');
+  });
+
+  renderLines();
+  renderHistory();
+</script>
+
+</body>
+</html>
